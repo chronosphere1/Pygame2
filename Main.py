@@ -2,6 +2,7 @@ import pygame
 import time
 import Resources
 import Settings
+import Vision
 import sys
 import random
 
@@ -18,7 +19,7 @@ def message_display(text):
     large_text = pygame.font.Font('freesansbold.ttf', 115)
     text_surf, text_rect = text_objects(text, large_text)
     # starting position, 20% width, 10% height
-    text_rect.center = width_20_percent, height_10_percent
+    text_rect.center = Settings.width_20_percent, Settings.height_10_percent
     Settings.game_display.blit(text_surf, text_rect)
     # update display
     pygame.display.update()
@@ -53,6 +54,7 @@ def game_loop():
 
             # checking the mouse for button click
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # left mouse button
                 if event.button == 1:
                     Resources.button_click(pos)
 
@@ -68,6 +70,9 @@ def game_loop():
 
         # draw everything
         draw_everything()
+
+        # draw graphics
+        Vision.display()
 
         # show what's happening
         pygame.display.update()

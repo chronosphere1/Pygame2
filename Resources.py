@@ -27,14 +27,18 @@ class BaseResource:
     def display_amount(self):
         font = pygame.font.SysFont(None, 60)
         text = font.render(str(self.amount), True, Settings.white)
-        Settings.game_display.blit(text, (Settings.width_20_percent, self.order * Settings.height_10_percent))
+        x_pos = Settings.width_20_percent + 10
+        y_pos = Settings.height_10_percent * self.order + Settings.height_10_percent * .25
+        Settings.game_display.blit(text, (x_pos, y_pos))
 
 
 # create the base resources; name, position
 resources_list = []
-water = BaseResource("Water", order=0)
-mud = BaseResource("Mud", order=1)
-clay = BaseResource("Clay", order=2)
+dirty_water = BaseResource("Dirty Water", order=0)
+water = BaseResource("Water", order=1)
+mud = BaseResource("Mud", order=2)
+clay = BaseResource("Clay", order=3)
+sand = BaseResource("Sand", order=4)
 
 per_tick = 0
 
@@ -44,7 +48,7 @@ def machine_main():
     global per_tick
     per_tick += 1
     if per_tick >= 60:
-        water.increase(1)
+        dirty_water.increase(1)
         per_tick = 0
 
 
