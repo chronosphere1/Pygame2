@@ -25,6 +25,7 @@ pygame.display.set_caption('pygame2')
 clock = pygame.time.Clock()
 
 
+# button class
 class Button:
     def __init__(self, color, x, y, width, height, text=''):
         self.color = color
@@ -34,11 +35,8 @@ class Button:
         self.height = int(height)
         self.text = text
 
-    def draw(self, game_display, outline=None):
+    def draw(self, game_display):
         # Call this method to draw the button on the screen
-        if outline:
-            pygame.draw.rect(game_display, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
-
         pygame.draw.rect(game_display, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
@@ -53,6 +51,23 @@ class Button:
             if self.y < pos[1] < self.y + self.height:
                 return True
         return False
+
+
+# button actions
+# button click
+def button_click(pos):
+    for resource in resources_list:
+        if resource.button.is_over(pos):
+            resource.increase(1)
+
+
+# button mouse over
+def mouse_over(pos):
+    for resource in resources_list:
+        if resource.button.is_over(pos):
+            resource.button.color = (195, 195, 195)
+        else:
+            resource.button.color = (220, 220, 220)
 
 
 # make both the surf and rect render
@@ -79,15 +94,17 @@ class BaseResource:
     # set resource start amount
     amount = 0
 
-    def __init__(self, name):
+    def __init__(self, name, order):
         self.name = name
+        self.order = order
         # create resource button
         self.button = Button(color=(220, 220, 220),
                              x=0,
-                             y=0,
+                             y=order * height_10_percent,
                              width=width_20_percent,
                              height=height_10_percent,
                              text=name)
+        resources_list.append(self)
 
     def increase(self, increase_amount):
         self.amount = self.amount + increase_amount
@@ -96,22 +113,23 @@ class BaseResource:
     def display_amount(self):
         font = pygame.font.SysFont(None, 60)
         text = font.render(str(self.amount), True, white)
-        game_display.blit(text, (width_20_percent, 0))
+        game_display.blit(text, (width_20_percent, self.order * height_10_percent))
 
 
-# create the base resources, amount 0
-water = BaseResource("Water")
-muddy_water = BaseResource("Muddy water")
+# create the base resources; name, position
+resources_list = []
+water = BaseResource("Water", order=0)
+mud = BaseResource("Mud", order=1)
+clay = BaseResource("Clay", order=2)
 
 
-
-
-# draw button
-def draw_button():
-    # create the button
-    water.button.draw(game_display, (0, 0, 0))
-    # display the amount
-    water.display_amount()
+# draw everything
+def draw_buttons():
+    for resource in resources_list:
+        # create the buttons
+        resource.button.draw(game_display)
+        # display the amounts
+        resource.display_amount()
 
 
 def game_loop():
@@ -130,22 +148,17 @@ def game_loop():
 
             # checking the mouse for button click
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if water.button.is_over(pos):
-                    water.increase(1)
-                    print("Total water: {}".format(water.amount))
+                button_click(pos)
 
             # check mouse for hover
             if event.type == pygame.MOUSEMOTION:
-                if water.button.is_over(pos):
-                    water.button.color = (195, 195, 195)
-                else:
-                    water.button.color = (220, 220, 220)
+                mouse_over(pos)
 
         # black background
         game_display.fill(black)
 
         # draw buttons
-        draw_button()
+        draw_buttons()
 
         # show what's happening
         pygame.display.update()
