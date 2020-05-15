@@ -2,16 +2,13 @@ import pygame
 import Constants
 import Buildings
 
-FRAME_WIDTH = Constants.DISPLAY_WIDTH / 2  # currently 600
-FRAME_HEIGHT = Constants.DISPLAY_HEIGHT / 2  # currently 400
-BLOCK_WIDTH = Constants.DISPLAY_WIDTH / 20
-BLOCK_HEIGHT = Constants.DISPLAY_HEIGHT / 20
-
 
 # main graphics function
 def display(world_map):
     # background, shouldn't be visible
-    pygame.draw.rect(Constants.game_display, Constants.blue, (FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT), 0)
+    pygame.draw.rect(Constants.game_display, Constants.blue,
+                     (Constants.FRAME_WIDTH, 0, Constants.FRAME_WIDTH,
+                      Constants.FRAME_HEIGHT), 0)
     # draw map
     draw_map(world_map)
     # grid
@@ -33,14 +30,19 @@ def get_tile_colour(tile_contents):
 # draws a rectangle for every letter in map.txt
 def draw_map(map_tiles):
     # loop through the map
-    for j, tile in enumerate(map_tiles):
-        for i, tile_contents in enumerate(tile):
+    for y_grid, tile in enumerate(map_tiles):
+        for x_grid, tile_contents in enumerate(tile):
             # print("{},{}: {}".format(i, j, tile_contents))
-            block = pygame.Rect(i * BLOCK_WIDTH + FRAME_WIDTH,  # start offset by frame width
-                                j * BLOCK_HEIGHT,
-                                BLOCK_WIDTH,
-                                BLOCK_HEIGHT)
+            x_pos = x_grid * Constants.BLOCK_WIDTH + Constants.FRAME_WIDTH  # start offset by frame width
+            y_pos = y_grid * Constants.BLOCK_HEIGHT
+
+            block = pygame.Rect(x_pos, y_pos,
+                                Constants.BLOCK_WIDTH,
+                                Constants.BLOCK_HEIGHT)
             pygame.draw.rect(Constants.game_display, get_tile_colour(tile_contents), block)
+
+            # make buildings
+            Buildings.make_buildings(x_grid, y_grid, x_pos, y_pos)
 
 
 # read map
@@ -61,11 +63,11 @@ def read_map(map_file):
 def grid():
     for x in range(0, 10):
         # vertical line starting top middle, each iteration 10% further to east
-        vertical_start_line = [FRAME_WIDTH + FRAME_WIDTH / 10 * x, 0]
-        vertical_end_line = [FRAME_WIDTH + FRAME_WIDTH / 10 * x, FRAME_HEIGHT]
+        vertical_start_line = [Constants.FRAME_WIDTH + Constants.FRAME_WIDTH / 10 * x, 0]
+        vertical_end_line = [Constants.FRAME_WIDTH + Constants.FRAME_WIDTH / 10 * x, Constants.FRAME_HEIGHT]
         # horizontal line starting top middle, each iteration 10% further to south
-        horizontal_start_line = [FRAME_WIDTH, FRAME_HEIGHT / 10 * x]
-        horizontal_end_line = [FRAME_WIDTH * 2, FRAME_HEIGHT / 10 * x]
+        horizontal_start_line = [Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT / 10 * x]
+        horizontal_end_line = [Constants.FRAME_WIDTH * 2, Constants.FRAME_HEIGHT / 10 * x]
 
         pygame.draw.line(Constants.game_display,
                          Constants.black,

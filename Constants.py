@@ -16,6 +16,12 @@ clock = pygame.time.Clock()
 WIDTH_20_PERCENT = int(DISPLAY_WIDTH / 5)
 HEIGHT_10_PERCENT = int(DISPLAY_HEIGHT / 10)
 
+FRAME_WIDTH = DISPLAY_WIDTH / 2  # currently 600
+FRAME_HEIGHT = DISPLAY_HEIGHT / 2  # currently 400
+BLOCK_WIDTH = DISPLAY_WIDTH / 20
+BLOCK_HEIGHT = DISPLAY_HEIGHT / 20
+
+
 # RBG colours
 black = (0, 0, 0)
 red = (255, 0, 0)
@@ -29,4 +35,8 @@ brown = (103, 87, 31)
 
 # map file
 map_file = "map.txt"
-square_building = "building1.bmp"
+
+# building
+square_building = 'building1.bmp'
+
+

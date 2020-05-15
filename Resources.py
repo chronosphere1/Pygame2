@@ -48,7 +48,7 @@ class BaseResource:
         elif self == water:
             water_button()
         else:
-            print("{} button clicked but nothing happened".format(self.name))
+            print("'{}' button clicked but nothing happened".format(self.name))
 
     # display the resource amount
     def display_amount(self):
@@ -65,7 +65,6 @@ class Energy(BaseResource):
         # call base Resource
         super().__init__(name)
         self.amount = 20
-
 
     def recalculate(self):
         self.increase(self.base_increase)

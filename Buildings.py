@@ -11,21 +11,33 @@ class Building:
         self.x = x
         self.y = y
 
+        # loads the image
         self.img = pygame.image.load(image_location)
+        # creates a rectangle of the image size
+        self.rect = self.img.get_rect().size
+        print(self.rect[0])
+
         # add to building list
         building_list.append(self)
 
         # print("Can't find building image: {}".format(image_location)
 
-    def draw_building(self):
-        Constants.game_display.blit(self.img, (self.x, self.y))
+    def draw_building(self, x_pos, y_pos):
+        # move the image to the right by half the image width
+        x_pos += self.rect[0] / 2
+        Constants.game_display.blit(self.img, (x_pos, y_pos))
 
 
-def make_buildings():
-    water_machine = Building("water_machine", Constants.square_building, 880, 220)
+# places the building on the grid
+# x_grid, y_grid, x_pos, y_pos
+def make_buildings(x_grid, y_grid, x_pos, y_pos):
+    if x_grid == water_machine.x \
+            and y_grid == water_machine.y:
+        water_machine.draw_building(x_pos, y_pos)
 
 
-def show_building():
-    for x in range(len(building_list)):
-        building_list[x].draw_building()
+water_machine = Building("water_machine", Constants.square_building, x=4, y=6)
+
+
+
 

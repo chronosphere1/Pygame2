@@ -75,9 +75,6 @@ def game_loop(world_map):
         # draw map and grid
         Vision.display(world_map)
 
-        # draw buildings
-        Buildings.show_building()
-
         # show what's happening
         pygame.display.update()
 
@@ -88,12 +85,10 @@ def game_loop(world_map):
 def main():
     # load map
     world_map = Vision.read_map(Constants.map_file)
-    # load buildings
-    Buildings.make_buildings()
 
     game_loop(world_map)
 
-
+    
 main()
 pygame.quit()
 quit()
