@@ -37,6 +37,9 @@ def draw_everything():
         resource.button.draw(Constants.game_display)
         # display the amounts
         resource.display_amount()
+    # draw machine buttons
+    for machine in Resources.machine_list:
+        machine.button.draw(Constants.game_display)
 
 
 def game_loop(world_map):
@@ -88,7 +91,7 @@ def main():
 
     game_loop(world_map)
 
-    
+
 main()
 pygame.quit()
 quit()

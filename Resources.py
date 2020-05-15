@@ -4,7 +4,7 @@ import Constants
 import time
 
 
-class BaseResource:
+class Unit:
     # set resource start amount
     amount = 0
 
@@ -13,18 +13,6 @@ class BaseResource:
         self.max = 20.0
         self.base_increase = 1/60
         self.text_colour = Constants.white
-
-        # add to resources list
-        resources_list.append(self)
-        self.order = resources_list.index(self)
-
-        # create resource button
-        self.button = Button.Button(color=(220, 220, 220),
-                                    x=0,
-                                    y=self.order * Constants.HEIGHT_10_PERCENT,
-                                    width=Constants.WIDTH_20_PERCENT,
-                                    height=Constants.HEIGHT_10_PERCENT,
-                                    text=name)
 
     def increase(self, increase_amount):
         # if it's under the maximum amount, increase
@@ -50,6 +38,25 @@ class BaseResource:
         else:
             print("'{}' button clicked but nothing happened".format(self.name))
 
+
+# resources class
+class BaseResource(Unit):
+    def __init__(self, name):
+        # call base resources
+        super().__init__(name)
+
+        # add to resources list and set order
+        resources_list.append(self)
+        self.order = resources_list.index(self)
+
+        # create resource button
+        self.button = Button.Button(color=(220, 220, 220),
+                                    x=0,
+                                    y=self.order * Constants.HEIGHT_10_PERCENT,
+                                    width=Constants.WIDTH_20_PERCENT,
+                                    height=Constants.HEIGHT_10_PERCENT,
+                                    text=name)
+
     # display the resource amount
     def display_amount(self):
         font = pygame.font.SysFont(None, 60)
@@ -60,6 +67,26 @@ class BaseResource:
         Constants.game_display.blit(text, (x_pos, y_pos))
 
 
+# machine class
+class BaseMachine(Unit):
+    def __init__(self, name):
+        # call base resources
+        super().__init__(name)
+        # add to machine list
+        machine_list.append(self)
+        # create machine button
+        self.button = Button.Button(color=(220, 220, 220),
+                                    x=Constants.DISPLAY_WIDTH / 2,
+                                    y=Constants.DISPLAY_HEIGHT / 2,
+                                    width=Constants.WIDTH_10_PERCENT,
+                                    height=Constants.HEIGHT_5_PERCENT,
+                                    text=name)
+
+    def machine_click(self):
+        print("Clicked: {}".format(self.name))
+
+
+# energy class
 class Energy(BaseResource):
     def __init__(self, name):
         # call base Resource
@@ -79,6 +106,10 @@ water = BaseResource("Water")
 Electrolyse = BaseResource("Electrolyse")
 clay = BaseResource("Clay")
 sand = BaseResource("Sand")
+
+# create machine
+machine_list = []
+pump = BaseMachine("Pump")
 
 
 # does a certain amount of things per tick
@@ -107,6 +138,9 @@ def button_click(pos):
         if resource.button.is_over(pos):
             # trigger the button click
             resource.button_click()
+    for machine in machine_list:
+        if machine.button.is_over(pos):
+            machine.machine_click()
 
 
 # button mouse over

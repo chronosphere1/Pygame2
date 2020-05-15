@@ -15,13 +15,11 @@ class Building:
         self.img = pygame.image.load(image_location)
         # creates a rectangle of the image size
         self.rect = self.img.get_rect().size
-        print(self.rect[0])
 
         # add to building list
         building_list.append(self)
 
-        # print("Can't find building image: {}".format(image_location)
-
+    # draw the building
     def draw_building(self, x_pos, y_pos):
         # move the image to the right by half the image width
         x_pos += self.rect[0] / 2
@@ -29,7 +27,6 @@ class Building:
 
 
 # places the building on the grid
-# x_grid, y_grid, x_pos, y_pos
 def make_buildings(x_grid, y_grid, x_pos, y_pos):
     if x_grid == water_machine.x \
             and y_grid == water_machine.y:
