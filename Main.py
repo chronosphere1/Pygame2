@@ -42,19 +42,13 @@ def draw_everything():
     Units.make_player()
 
 
-def key_press_action(key):
-    if key == pygame.K_LEFT:
-        Units.player.x -= 1
-    elif key == pygame.K_RIGHT:
-        Units.player.x += 1
-    elif key == pygame.K_DOWN:
-        Units.player.y += 1
-    elif key == pygame.K_UP:
-        Units.player.y -= 1
-
-
 def game_loop(world_map):
     game_exit = False
+
+    x_change = 0
+    y_change = 0
+    ticks_since_move = 0
+
     while not game_exit:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -65,8 +59,25 @@ def game_loop(world_map):
             pos = pygame.mouse.get_pos()
 
             # if any key is hit
-            if event.type == pygame.KEYDOWN:
-                key_press_action(event.key)
+            keys_pressed = pygame.key.get_pressed()
+
+            if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
+                x_change = 0  # nothing
+            elif keys_pressed[pygame.K_LEFT]:
+                x_change -= 1
+            elif keys_pressed[pygame.K_RIGHT]:
+                x_change += 1
+            else:
+                x_change = 0
+
+            if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
+                y_change = 0
+            elif keys_pressed[pygame.K_UP]:
+                y_change -= 1
+            elif keys_pressed[pygame.K_DOWN]:
+                y_change += 1
+            else:
+                y_change = 0
 
             # checking the mouse for button click
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -77,6 +88,12 @@ def game_loop(world_map):
             # check mouse for hover
             if event.type == pygame.MOUSEMOTION:
                 Resources.mouse_over(pos)
+
+        # before moving, check if you've hit the edge, if not, move player
+        if (Units.player.x + x_change) < 10 and (Units.player.x + x_change >= 0):
+            Units.player.x += x_change
+        if (Units.player.y + y_change) < 10 and (Units.player.y + y_change >= 0):
+            Units.player.y += y_change
 
         # black background
         Constants.game_display.fill(Constants.black)
