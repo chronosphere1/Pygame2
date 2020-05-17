@@ -3,7 +3,7 @@ import time
 import Resources
 import Constants
 import Vision
-import Buildings
+import Units
 import sys
 import random
 
@@ -37,9 +37,20 @@ def draw_everything():
         resource.button.draw(Constants.game_display)
         # display the amounts
         resource.display_amount()
-    # draw machine buttons
-    for machine in Resources.machine_list:
-        machine.button.draw(Constants.game_display)
+
+    # draw player
+    Units.make_player()
+
+
+def key_press_action(key):
+    if key == pygame.K_LEFT:
+        Units.player.x -= 1
+    elif key == pygame.K_RIGHT:
+        Units.player.x += 1
+    elif key == pygame.K_DOWN:
+        Units.player.y += 1
+    elif key == pygame.K_UP:
+        Units.player.y -= 1
 
 
 def game_loop(world_map):
@@ -54,7 +65,8 @@ def game_loop(world_map):
             pos = pygame.mouse.get_pos()
 
             # if any key is hit
-            keys_pressed = pygame.key.get_pressed()
+            if event.type == pygame.KEYDOWN:
+                key_press_action(event.key)
 
             # checking the mouse for button click
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -72,11 +84,11 @@ def game_loop(world_map):
         # run machines
         Resources.machine_main()
 
-        # draw everything
-        draw_everything()
-
         # draw map and grid
         Vision.display(world_map)
+
+        # draw everything else
+        draw_everything()
 
         # show what's happening
         pygame.display.update()

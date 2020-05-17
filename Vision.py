@@ -1,6 +1,5 @@
 import pygame
 import Constants
-import Buildings
 
 
 # main graphics function
@@ -41,8 +40,8 @@ def draw_map(map_tiles):
                                 Constants.BLOCK_HEIGHT)
             pygame.draw.rect(Constants.game_display, get_tile_colour(tile_contents), block)
 
-            # make buildings
-            Buildings.make_buildings(x_grid, y_grid, x_pos, y_pos)
+            # check if player is on this tile
+            # Units.check_grid_location(x_grid, y_grid)
 
 
 # read map

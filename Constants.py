@@ -44,5 +44,6 @@ map_file = "map.txt"
 
 # building
 square_building = 'building1.bmp'
+player = 'player.bmp'
 
 

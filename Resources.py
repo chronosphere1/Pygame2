@@ -72,18 +72,28 @@ class BaseMachine(Unit):
     def __init__(self, name):
         # call base resources
         super().__init__(name)
-        # add to machine list
-        machine_list.append(self)
+
+        # set machine cost
+        self.cost = 1
+
         # create machine button
         self.button = Button.Button(color=(220, 220, 220),
                                     x=Constants.DISPLAY_WIDTH / 2,
                                     y=Constants.DISPLAY_HEIGHT / 2,
                                     width=Constants.WIDTH_10_PERCENT,
-                                    height=Constants.HEIGHT_5_PERCENT,
+                                    height=Constants.HEIGHT_10_PERCENT,
                                     text=name)
 
     def machine_click(self):
-        print("Clicked: {}".format(self.name))
+        # check for conditions if the building can be placed
+        if coin.amount >= self.cost:
+            Buildings.place_building(self.name)
+            coin.amount -= self.cost
+        else:
+            print("Not enough coin, needed {} but have only {}".format(self.cost, coin. amount))
+        # place the building in a certain location
+
+        # create the building
 
 
 # energy class
@@ -99,17 +109,17 @@ class Energy(BaseResource):
 
 # create the base resources; name, position
 resources_list = []
-money = BaseResource("Coin")
+coin = BaseResource("Coin")
 energy = Energy("Energy")
 dirty_water = BaseResource("Dirty Water")
 water = BaseResource("Water")
-Electrolyse = BaseResource("Electrolyse")
+electrolyse = BaseResource("Electrolyse")
 clay = BaseResource("Clay")
 sand = BaseResource("Sand")
 
-# create machine
-machine_list = []
-pump = BaseMachine("Pump")
+
+# give some coin
+coin.amount = 1
 
 
 # does a certain amount of things per tick
@@ -138,9 +148,6 @@ def button_click(pos):
         if resource.button.is_over(pos):
             # trigger the button click
             resource.button_click()
-    for machine in machine_list:
-        if machine.button.is_over(pos):
-            machine.machine_click()
 
 
 # button mouse over
