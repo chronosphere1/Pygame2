@@ -60,22 +60,24 @@ def game_loop(world_map):
 
             # if any key is hit
             keys_pressed = pygame.key.get_pressed()
+            if keys_pressed[pygame.K_x]:
+                Units.x_action()
 
             if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
                 x_change = 0  # nothing
             elif keys_pressed[pygame.K_LEFT]:
-                x_change -= 1
+                x_change = -1
             elif keys_pressed[pygame.K_RIGHT]:
-                x_change += 1
+                x_change = 1
             else:
                 x_change = 0
 
             if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
                 y_change = 0
             elif keys_pressed[pygame.K_UP]:
-                y_change -= 1
+                y_change = -1
             elif keys_pressed[pygame.K_DOWN]:
-                y_change += 1
+                y_change = 1
             else:
                 y_change = 0
 
@@ -90,9 +92,11 @@ def game_loop(world_map):
                 Resources.mouse_over(pos)
 
         # before moving, check if you've hit the edge, if not, move player
-        if (Units.player.x + x_change) < 10 and (Units.player.x + x_change >= 0):
+        if (Units.player.x + x_change) <= (Constants.FRAME_WIDTH - Units.player.rect[0]) \
+                and (Units.player.x + x_change >= 0):
             Units.player.x += x_change
-        if (Units.player.y + y_change) < 10 and (Units.player.y + y_change >= 0):
+        if (Units.player.y + y_change) <= (Constants.FRAME_HEIGHT - Units.player.rect[1]) \
+                and (Units.player.y + y_change >= 0):
             Units.player.y += y_change
 
         # black background
