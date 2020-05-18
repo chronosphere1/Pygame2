@@ -2,7 +2,7 @@ import pygame
 import time
 import Resources
 import Constants
-import Vision
+import Map
 import Units
 import sys
 import random
@@ -106,7 +106,7 @@ def game_loop(world_map):
         Resources.machine_main()
 
         # draw map and grid
-        Vision.display(world_map)
+        Map.display(world_map)
 
         # draw everything else
         draw_everything()
@@ -120,7 +120,7 @@ def game_loop(world_map):
 
 def main():
     # load map
-    world_map = Vision.read_map(Constants.map_file)
+    world_map = Map.read_map(Constants.map_file)
 
     game_loop(world_map)
 

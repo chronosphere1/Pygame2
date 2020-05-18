@@ -1,5 +1,6 @@
 import pygame
 import Constants
+import Units
 
 
 # main graphics function
@@ -28,20 +29,27 @@ def get_tile_colour(tile_contents):
 
 # draws a rectangle for every letter in map.txt
 def draw_map(map_tiles):
+    # create a list to put the map contents in
+    rows, cols = (10, 10)
+    map_contents = [[0 for i in range(cols)] for j in range(rows)]
+
     # loop through the map
     for y_grid, tile in enumerate(map_tiles):
         for x_grid, tile_contents in enumerate(tile):
-            # print("{},{}: {}".format(i, j, tile_contents))
+            # print("{},{}: {}".format(x_grid, y_grid, tile_contents))
             x_pos = x_grid * Constants.BLOCK_WIDTH + Constants.FRAME_WIDTH  # start offset by frame width
             y_pos = y_grid * Constants.BLOCK_HEIGHT
+
+            # add to map contents
+            map_contents[y_grid][x_grid] = tile_contents
 
             block = pygame.Rect(x_pos, y_pos,
                                 Constants.BLOCK_WIDTH,
                                 Constants.BLOCK_HEIGHT)
             pygame.draw.rect(Constants.game_display, get_tile_colour(tile_contents), block)
 
-            # check if player is on this tile
-            # Units.check_grid_location(x_grid, y_grid)
+    # send the map
+    Units.map_contents(map_contents)
 
 
 # read map
