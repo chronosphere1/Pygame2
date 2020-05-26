@@ -50,14 +50,18 @@ def random_colour_generator():
     random_colour = (r, g, b)
     return random_colour
 
+# class RandomColour(self):
+#     __init__:
+#
+
 
 def random_colour_generator2():
 
-    # print(abs(pygame.time.get_ticks() % 255))
+    print(pygame.time.get_ticks())
 
-    r = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
-    g = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
-    b = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+    r = 255 - abs(random.randint(0, 255)) # random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+    g = int((random.randint(0, 255)+random.randint(0, 255)+random.randint(0, 255)) / 3)
+    b = int((random.randint(0, 255)+random.randint(0, 255)+random.randint(0, 255)) / 3)
 
     random_colour = (r, g, b)
     return random_colour

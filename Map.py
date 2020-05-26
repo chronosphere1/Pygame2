@@ -1,6 +1,7 @@
 import pygame
 import Constants
 import Units
+import random
 
 
 # main graphics function

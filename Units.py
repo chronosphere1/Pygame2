@@ -26,10 +26,19 @@ class Unit:
         if counter % 9 == 0:
             self.colour = Constants.random_colour_generator2()
 
+        lighter = []
+
+        for colour in self.colour:
+            colour = min(255, colour + 50)
+            lighter.append(colour)
+
+        lighter_colour = tuple(lighter)
+
         # draw a 20x20 circle with mad colours
         pygame.draw.ellipse(Constants.game_display, Constants.black, [self.x, self.y, 20, 20])
-        pygame.draw.ellipse(Constants.game_display, self.colour, [self.x+1, self.y+1, 18, 18])
-
+        pygame.draw.ellipse(Constants.game_display, self.colour, [self.x + 1, self.y + 1, 18, 18])
+        # lighter inner circle
+        pygame.draw.ellipse(Constants.game_display, lighter_colour, [self.x + 5, self.y + 5, 10, 10])
 
 
 # draws the player on the grid
