@@ -4,12 +4,15 @@ import Map
 
 local_map = []
 
+
 class Unit:
     def __init__(self, name, image_location, x, y):
         self.name = name
         self.amount = 1
         self.x = x
         self.y = y
+
+        self.colour = (255, 0, 255)
 
         # loads the image
         self.img = pygame.image.load(image_location)
@@ -18,11 +21,15 @@ class Unit:
 
     # draw the player
     def draw_player(self):
-        # calculate x and y position
+        # every few frames, change the colour
+        counter = int(pygame.time.get_ticks())
+        if counter % 9 == 0:
+            self.colour = Constants.random_colour_generator2()
 
-        # draw image on screen
-        # offset by frame width
-        Constants.game_display.blit(self.img, (self.x + Constants.FRAME_WIDTH, self.y))
+        # draw a 20x20 circle with mad colours
+        pygame.draw.ellipse(Constants.game_display, Constants.black, [self.x, self.y, 20, 20])
+        pygame.draw.ellipse(Constants.game_display, self.colour, [self.x+1, self.y+1, 18, 18])
+
 
 
 # draws the player on the grid
@@ -59,6 +66,7 @@ def x_action():
     # what's on the map?
     tile_terrain = local_map[grid_x][grid_y]
 
+    # if within 20% of the edge, ignore
     if x_border < 0.2 or x_border > 0.8\
             or y_border < 0.2 or y_border > 0.8:
         print("too close to the border")

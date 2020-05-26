@@ -11,8 +11,6 @@ def display(world_map):
                       Constants.FRAME_HEIGHT), 0)
     # draw map
     draw_map(world_map)
-    # grid
-    grid()
 
 
 # uses the letters of map.txt to color the map
@@ -30,14 +28,14 @@ def get_tile_colour(tile_contents):
 # draws a rectangle for every letter in map.txt
 def draw_map(map_tiles):
     # create a list to put the map contents in
-    rows, cols = (10, 10)
+    rows, cols = (20, 40)
     map_contents = [[0 for i in range(cols)] for j in range(rows)]
 
     # loop through the map
     for y_grid, tile in enumerate(map_tiles):
         for x_grid, tile_contents in enumerate(tile):
             # print("{},{}: {}".format(x_grid, y_grid, tile_contents))
-            x_pos = x_grid * Constants.BLOCK_WIDTH + Constants.FRAME_WIDTH  # start offset by frame width
+            x_pos = x_grid * Constants.BLOCK_WIDTH
             y_pos = y_grid * Constants.BLOCK_HEIGHT
 
             # add to map contents
@@ -66,27 +64,27 @@ def read_map(map_file):
         quit()
 
 
-# draw a grid on top
-def grid():
-    for x in range(0, 10):
-        # vertical line starting top middle, each iteration 10% further to east
-        vertical_start_line = [Constants.FRAME_WIDTH + Constants.FRAME_WIDTH / 10 * x, 0]
-        vertical_end_line = [Constants.FRAME_WIDTH + Constants.FRAME_WIDTH / 10 * x, Constants.FRAME_HEIGHT]
-        # horizontal line starting top middle, each iteration 10% further to south
-        horizontal_start_line = [Constants.FRAME_WIDTH, Constants.FRAME_HEIGHT / 10 * x]
-        horizontal_end_line = [Constants.FRAME_WIDTH * 2, Constants.FRAME_HEIGHT / 10 * x]
-
-        pygame.draw.line(Constants.game_display,
-                         Constants.black,
-                         vertical_start_line,
-                         vertical_end_line,
-                         1)
-
-        pygame.draw.line(Constants.game_display,
-                         Constants.black,
-                         horizontal_start_line,
-                         horizontal_end_line,
-                         1)
+# # draw a grid on top
+# def grid():
+#     for x in range(0, 20):
+#         # vertical line starting top, each iteration 10% further to east
+#         vertical_start_line = [Constants.FRAME_WIDTH / 20 * x, 0]
+#         vertical_end_line = [Constants.FRAME_WIDTH / 20 * x, Constants.FRAME_HEIGHT]
+#         # horizontal line starting top, each iteration 10% further to south
+#         horizontal_start_line = [0, Constants.FRAME_WIDTH / 20 * x]
+#         horizontal_end_line = [Constants.FRAME_WIDTH, Constants.FRAME_WIDTH / 20 * x]
+#
+#         pygame.draw.line(Constants.game_display,
+#                          Constants.black,
+#                          vertical_start_line,
+#                          vertical_end_line,
+#                          1)
+#
+#         pygame.draw.line(Constants.game_display,
+#                          Constants.black,
+#                          horizontal_start_line,
+#                          horizontal_end_line,
+#                          1)
 
 
 

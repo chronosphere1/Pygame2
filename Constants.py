@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # set resolution
 DISPLAY_WIDTH = 1200
@@ -22,10 +23,10 @@ HEIGHT_10_PERCENT = int(DISPLAY_HEIGHT / 10)
 HEIGHT_20_PERCENT = int(DISPLAY_HEIGHT / 5)
 WIDTH_20_PERCENT = int(DISPLAY_WIDTH / 5)
 
-FRAME_WIDTH = 600
-FRAME_HEIGHT = 600
-BLOCK_WIDTH = 60
-BLOCK_HEIGHT = 60
+FRAME_WIDTH = 1200
+FRAME_HEIGHT = 800
+BLOCK_WIDTH = 30
+BLOCK_HEIGHT = 30
 
 
 # RBG colours
@@ -38,6 +39,29 @@ alt_blue = (62, 67, 206)
 dark_blue = (31, 52, 103)
 orange = (255, 189, 51)
 brown = (103, 87, 31)
+
+
+# random colour
+def random_colour_generator():
+    r = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+    g = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+    b = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+
+    random_colour = (r, g, b)
+    return random_colour
+
+
+def random_colour_generator2():
+
+    # print(abs(pygame.time.get_ticks() % 255))
+
+    r = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+    g = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+    b = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
+
+    random_colour = (r, g, b)
+    return random_colour
+
 
 # map file
 map_file = "map.txt"

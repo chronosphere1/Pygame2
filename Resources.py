@@ -52,18 +52,18 @@ class BaseResource(Unit):
         # create resource button
         self.button = Button.Button(color=(220, 220, 220),
                                     x=0,
-                                    y=self.order * Constants.HEIGHT_10_PERCENT,
-                                    width=Constants.WIDTH_20_PERCENT,
-                                    height=Constants.HEIGHT_10_PERCENT,
+                                    y=self.order * Constants.HEIGHT_5_PERCENT,
+                                    width=Constants.WIDTH_10_PERCENT,
+                                    height=Constants.HEIGHT_5_PERCENT,
                                     text=name)
 
     # display the resource amount
     def display_amount(self):
-        font = pygame.font.SysFont(None, 60)
+        font = pygame.font.SysFont(None, 30)
         # display amount as text, rounded to 1 digit
         text = font.render(str(round(self.amount, 1)), True, self.text_colour)
-        x_pos = Constants.WIDTH_20_PERCENT + 10
-        y_pos = Constants.HEIGHT_10_PERCENT * self.order + Constants.HEIGHT_10_PERCENT * .25
+        x_pos = Constants.WIDTH_10_PERCENT + 10
+        y_pos = Constants.HEIGHT_5_PERCENT * self.order + Constants.HEIGHT_5_PERCENT * .25
         Constants.game_display.blit(text, (x_pos, y_pos))
 
 
@@ -113,7 +113,6 @@ coin = BaseResource("Coin")
 energy = Energy("Energy")
 dirty_water = BaseResource("Dirty Water")
 water = BaseResource("Water")
-electrolyse = BaseResource("Electrolyse")
 clay = BaseResource("Clay")
 sand = BaseResource("Sand")
 
