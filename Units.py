@@ -1,6 +1,7 @@
 import pygame
 import Constants
 import Map
+import Randoms
 
 local_map = []
 
@@ -20,11 +21,10 @@ class Unit:
         self.rect = self.img.get_rect().size
 
     # draw the player
-    def draw_player(self):
+    def draw_player(self, frame):
         # every few frames, change the colour
-        counter = int(pygame.time.get_ticks())
-        if counter % 9 == 0:
-            self.colour = Constants.random_colour_generator2()
+
+        self.colour = Randoms.random_colour_generator2(frame)
 
         lighter = []
 
@@ -42,8 +42,8 @@ class Unit:
 
 
 # draws the player on the grid
-def make_player():
-    player.draw_player()
+def make_player(frame):
+    player.draw_player(frame)
 
 
 def place_building(building_name):

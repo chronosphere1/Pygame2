@@ -10,6 +10,8 @@ import random
 pygame.init()
 
 
+
+
 # make both the surf and rect render
 def text_objects(text, font):
     text_surface = font.render(text, True, red)
@@ -31,7 +33,7 @@ def message_display(text):
 
 
 # draw everything
-def draw_everything():
+def draw_everything(frame):
     for resource in Resources.resources_list:
         # create the buttons
         resource.button.draw(Constants.game_display)
@@ -39,11 +41,13 @@ def draw_everything():
         resource.display_amount()
 
     # draw player
-    Units.make_player()
+    Units.make_player(frame)
 
 
 def game_loop(world_map):
     game_exit = False
+
+    frame = 0
 
     x_change = 0
     y_change = 0
@@ -99,6 +103,11 @@ def game_loop(world_map):
                 and (Units.player.y + y_change >= 0):
             Units.player.y += y_change
 
+        # update frame number
+        if frame >= 60:
+            frame = 0
+        frame += 1
+
         # black background
         Constants.game_display.fill(Constants.black)
 
@@ -109,7 +118,7 @@ def game_loop(world_map):
         Map.display(world_map)
 
         # draw everything else
-        draw_everything()
+        draw_everything(frame)
 
         # show what's happening
         pygame.display.update()
