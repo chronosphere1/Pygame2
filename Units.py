@@ -7,7 +7,7 @@ local_map = []
 
 
 class Unit:
-    def __init__(self, name, image_location, x, y):
+    def __init__(self, name, x, y):
         self.name = name
         self.amount = 1
         self.x = x
@@ -15,19 +15,17 @@ class Unit:
 
         self.colour = (255, 0, 255)
 
-        # loads the image
-        self.img = pygame.image.load(image_location)
-        # creates a rectangle of the image size
-        self.rect = self.img.get_rect().size
+        # creates a rectangle of the player size
+        self.rect = (20, 20)
 
     # draw the player
     def draw_player(self, frame):
         # every few frames, change the colour
 
-        self.colour = Randoms.random_colour_generator2(frame)
+        self.colour = Randoms.player_colour.forward_then_backward(frame)
 
         lighter = []
-
+        # get lighter colour
         for colour in self.colour:
             colour = min(255, colour + 50)
             lighter.append(colour)
@@ -64,13 +62,15 @@ def x_action():
     map_x = (player.x + player.rect[0] / 2) / Constants.BLOCK_HEIGHT
     map_y = (player.y + player.rect[0] / 2) / Constants.BLOCK_WIDTH
 
+    print(player.x, player.y)
+
     # determine how far the player is from the grid border
     x_border = map_x - int(map_x)
     y_border = map_y - int(map_y)
 
     # convert to a grid number by removing decimals
-    grid_x = int(map_x)
-    grid_y = int(map_y)
+    grid_x = min(int(map_x), 39)  # max 40
+    grid_y = min(int(map_y), 19)  # max 20
 
     # what's on the map?
     tile_terrain = local_map[grid_x][grid_y]
@@ -90,4 +90,5 @@ def check_grid_location(x_grid, y_grid):
     pass
 
 
-player = Unit("Goku", Constants.player, x=300, y=300)
+# create player
+player = Unit("Goku", x=300, y=300)

@@ -25,7 +25,7 @@ HEIGHT_20_PERCENT = int(DISPLAY_HEIGHT / 5)
 WIDTH_20_PERCENT = int(DISPLAY_WIDTH / 5)
 
 FRAME_WIDTH = 1200
-FRAME_HEIGHT = 800
+FRAME_HEIGHT = 600
 BLOCK_WIDTH = 30
 BLOCK_HEIGHT = 30
 
@@ -42,11 +42,8 @@ orange = (255, 189, 51)
 brown = (103, 87, 31)
 
 
-
-
 # map file
 map_file = "map.txt"
 
 # building
 square_building = 'building1.bmp'
-player = 'player.bmp'

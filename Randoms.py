@@ -9,6 +9,8 @@ colour_array = np.random.randint(1, 255, size=(60, 3))
 # sort from darkest to lightest colour
 colour_array = colour_array[np.argsort(colour_array.sum(axis=1))]
 
+forward = True
+
 
 # random colour
 def random_colour_generator():
@@ -20,8 +22,22 @@ def random_colour_generator():
     return random_colour
 
 
-def random_colour_generator2(frame):
+class RandomColour:
+    def __init__(self):
+        self.forward = True
+        self.rgb_colour = (255, 0, 255)
 
-    rgb_colour = colour_array[frame-1]
-    return rgb_colour
+    def forward_then_backward(self, frame):
+        if self.forward:
+            rgb_colour = colour_array[frame-1]
+        else:
+            rgb_colour = colour_array[60-frame]
+
+        if frame >= 60:
+            self.forward = False
+
+        return rgb_colour
+
+
+player_colour = RandomColour()
 

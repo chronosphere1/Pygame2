@@ -30,7 +30,7 @@ def get_tile_colour(tile_contents):
 def draw_map(map_tiles):
     # create a list to put the map contents in
     rows, cols = (20, 40)
-    map_contents = [[0 for i in range(cols)] for j in range(rows)]
+    map_contents = [[0 for i in range(rows)] for j in range(cols)]
 
     # loop through the map
     for y_grid, tile in enumerate(map_tiles):
@@ -40,7 +40,7 @@ def draw_map(map_tiles):
             y_pos = y_grid * Constants.BLOCK_HEIGHT
 
             # add to map contents
-            map_contents[y_grid][x_grid] = tile_contents
+            map_contents[x_grid][y_grid] = tile_contents
 
             block = pygame.Rect(x_pos, y_pos,
                                 Constants.BLOCK_WIDTH,

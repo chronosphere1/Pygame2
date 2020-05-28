@@ -10,8 +10,6 @@ import random
 pygame.init()
 
 
-
-
 # make both the surf and rect render
 def text_objects(text, font):
     text_surface = font.render(text, True, red)
@@ -102,6 +100,8 @@ def game_loop(world_map):
         if (Units.player.y + y_change) <= (Constants.FRAME_HEIGHT - Units.player.rect[1]) \
                 and (Units.player.y + y_change >= 0):
             Units.player.y += y_change
+
+        # create check to see what tile you're on
 
         # update frame number
         if frame >= 60:
