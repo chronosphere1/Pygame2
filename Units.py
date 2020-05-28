@@ -12,6 +12,8 @@ class Unit:
         self.amount = 1
         self.x = x
         self.y = y
+        self.map_x = x
+        self.may_y = y
 
         self.colour = (255, 0, 255)
 
@@ -38,6 +40,9 @@ class Unit:
         # lighter inner circle
         pygame.draw.ellipse(Constants.game_display, lighter_colour, [self.x + 5, self.y + 5, 10, 10])
 
+    def player_tile(self, x, y):
+        pass
+
 
 # draws the player on the grid
 def make_player(frame):
@@ -62,8 +67,6 @@ def x_action():
     map_x = (player.x + player.rect[0] / 2) / Constants.BLOCK_HEIGHT
     map_y = (player.y + player.rect[0] / 2) / Constants.BLOCK_WIDTH
 
-    print(player.x, player.y)
-
     # determine how far the player is from the grid border
     x_border = map_x - int(map_x)
     y_border = map_y - int(map_y)
@@ -76,8 +79,9 @@ def x_action():
     tile_terrain = local_map[grid_x][grid_y]
 
     # if within 20% of the edge, ignore
-    if x_border < 0.2 or x_border > 0.8\
-            or y_border < 0.2 or y_border > 0.8:
+    if x_border < 0.1 or x_border > 0.9\
+            or y_border < 0.1 or y_border > 0.9:
+        print("map location {},{}".format(grid_x, grid_y))
         print("too close to the border")
 
     else:

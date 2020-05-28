@@ -23,7 +23,21 @@ def get_tile_colour(tile_contents):
         tile_colour = Constants.orange
     if tile_contents == "-":
         tile_colour = Constants.blue
+
     return tile_colour
+
+
+def get_alt_tile_colour(tile_colour):
+    # get lighter colour
+    lighter = []
+
+    # loop through r, g, b and make each a bit lighter
+    for colour in tile_colour:
+        colour = min(255, colour + 20)
+        lighter.append(colour)
+
+    lighter_colour = tuple(lighter)
+    return lighter_colour
 
 
 # draws a rectangle for every letter in map.txt
@@ -36,16 +50,34 @@ def draw_map(map_tiles):
     for y_grid, tile in enumerate(map_tiles):
         for x_grid, tile_contents in enumerate(tile):
             # print("{},{}: {}".format(x_grid, y_grid, tile_contents))
-            x_pos = x_grid * Constants.BLOCK_WIDTH
-            y_pos = y_grid * Constants.BLOCK_HEIGHT
+            x_pos = (x_grid * Constants.BLOCK_WIDTH)
+            y_pos = (y_grid * Constants.BLOCK_HEIGHT)
 
             # add to map contents
             map_contents[x_grid][y_grid] = tile_contents
 
-            block = pygame.Rect(x_pos, y_pos,
-                                Constants.BLOCK_WIDTH,
-                                Constants.BLOCK_HEIGHT)
-            pygame.draw.rect(Constants.game_display, get_tile_colour(tile_contents), block)
+            # get tile colours
+            tile_colour = get_tile_colour(tile_contents)
+            lighter_colour = get_alt_tile_colour(tile_colour)
+
+            # draw darker square first
+            block1 = pygame.Rect(x_pos, y_pos,
+                                 Constants.BLOCK_WIDTH,
+                                 Constants.BLOCK_HEIGHT)
+            pygame.draw.rect(Constants.game_display, tile_colour, block1)
+
+            # draw lighter square on top
+            block2 = pygame.Rect(x_pos + 1, y_pos + 1,
+                                 Constants.BLOCK_WIDTH - 2,
+                                 Constants.BLOCK_HEIGHT - 2)
+            pygame.draw.rect(Constants.game_display, lighter_colour, block2)
+
+            # draw darker square on top
+            block3 = pygame.Rect(x_pos + 3, y_pos + 3,
+                                 Constants.BLOCK_WIDTH - 6,
+                                 Constants.BLOCK_HEIGHT - 6)
+            pygame.draw.rect(Constants.game_display, tile_colour, block3)
+
 
     # send the map
     Units.map_contents(map_contents)
@@ -63,7 +95,6 @@ def read_map(map_file):
     except OSError:
         print("Exit - Can't find map file: map.txt.")
         quit()
-
 
 # # draw a grid on top
 # def grid():
@@ -86,19 +117,3 @@ def read_map(map_file):
 #                          horizontal_start_line,
 #                          horizontal_end_line,
 #                          1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

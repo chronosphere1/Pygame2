@@ -12,7 +12,7 @@ pygame.init()
 
 # make both the surf and rect render
 def text_objects(text, font):
-    text_surface = font.render(text, True, red)
+    text_surface = font.render(text, True, Constants.red)
     return text_surface, text_surface.get_rect()
 
 
@@ -42,14 +42,37 @@ def draw_everything(frame):
     Units.make_player(frame)
 
 
+class Move:
+    def __init__(self):
+        self.x_change = 0
+        self.y_change = 0
+        self.key_down = 0.0
+
+    def change(self, keys_pressed):
+        if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
+            self.x_change = 0  # nothing
+        elif keys_pressed[pygame.K_LEFT]:
+            self.x_change = -1
+        elif keys_pressed[pygame.K_RIGHT]:
+            self.x_change = 1
+        else:
+            self.x_change = 0
+
+        if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
+            self.y_change = 0
+        elif keys_pressed[pygame.K_UP]:
+            self.y_change = -1
+        elif keys_pressed[pygame.K_DOWN]:
+            self.y_change = 1
+        else:
+            self.y_change = 0
+
+
+
 def game_loop(world_map):
     game_exit = False
-
     frame = 0
-
-    x_change = 0
-    y_change = 0
-    ticks_since_move = 0
+    move = Move()
 
     while not game_exit:
         for event in pygame.event.get():
@@ -65,23 +88,8 @@ def game_loop(world_map):
             if keys_pressed[pygame.K_x]:
                 Units.x_action()
 
-            if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
-                x_change = 0  # nothing
-            elif keys_pressed[pygame.K_LEFT]:
-                x_change = -1
-            elif keys_pressed[pygame.K_RIGHT]:
-                x_change = 1
-            else:
-                x_change = 0
-
-            if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
-                y_change = 0
-            elif keys_pressed[pygame.K_UP]:
-                y_change = -1
-            elif keys_pressed[pygame.K_DOWN]:
-                y_change = 1
-            else:
-                y_change = 0
+            # calculate movement
+            move.change(keys_pressed)
 
             # checking the mouse for button click
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -94,30 +102,31 @@ def game_loop(world_map):
                 Resources.mouse_over(pos)
 
         # before moving, check if you've hit the edge, if not, move player
-        if (Units.player.x + x_change) <= (Constants.FRAME_WIDTH - Units.player.rect[0]) \
-                and (Units.player.x + x_change >= 0):
-            Units.player.x += x_change
-        if (Units.player.y + y_change) <= (Constants.FRAME_HEIGHT - Units.player.rect[1]) \
-                and (Units.player.y + y_change >= 0):
-            Units.player.y += y_change
+        if (Units.player.x + move.x_change) <= (Constants.FRAME_WIDTH - Units.player.rect[0]) \
+                and (Units.player.x + move.x_change >= 0):
+            Units.player.x += move.x_change
+        if (Units.player.y + move.y_change) <= (Constants.FRAME_HEIGHT - Units.player.rect[1]) \
+                and (Units.player.y + move.y_change >= 0):
+            Units.player.y += move.y_change
 
         # create check to see what tile you're on
 
-        # update frame number
+        # update frame number, 0 to 59?
         if frame >= 60:
             frame = 0
-        frame += 1
+        else:
+            frame += 1
 
         # black background
         Constants.game_display.fill(Constants.black)
 
-        # run machines
-        Resources.machine_main()
-
         # draw map and grid
         Map.display(world_map)
 
-        # draw everything else
+        # run machines
+        Resources.machine_main()
+
+        # draw units and buttons and resource amount
         draw_everything(frame)
 
         # show what's happening

@@ -87,13 +87,9 @@ class BaseMachine(Unit):
     def machine_click(self):
         # check for conditions if the building can be placed
         if coin.amount >= self.cost:
-            Buildings.place_building(self.name)
             coin.amount -= self.cost
         else:
             print("Not enough coin, needed {} but have only {}".format(self.cost, coin. amount))
-        # place the building in a certain location
-
-        # create the building
 
 
 # energy class
@@ -113,7 +109,6 @@ coin = BaseResource("Coin")
 energy = Energy("Energy")
 dirty_water = BaseResource("Dirty Water")
 water = BaseResource("Water")
-clay = BaseResource("Clay")
 sand = BaseResource("Sand")
 
 
