@@ -24,7 +24,7 @@ class Unit:
     def draw_player(self, frame):
         # every few frames, change the colour
 
-        self.colour = Randoms.player_colour.forward_then_backward(frame)
+        self.colour = Randoms.player_colour.slower(frame)
 
         lighter = []
         # get lighter colour

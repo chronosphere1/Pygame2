@@ -10,7 +10,7 @@ colour_array = np.random.randint(1, 255, size=(60, 3))
 colour_array = colour_array[np.argsort(colour_array.sum(axis=1))]
 
 
-# random colour
+# random colour, returns one random colour
 def random_colour_generator():
     r = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
     g = random.randint(0, 85)+random.randint(0, 85)+random.randint(0, 85)
@@ -25,10 +25,9 @@ class RandomColour:
         self.rgb_colour = (255, 0, 255)
         self.slower = 0
 
-    def forward_then_backward(self, frame):
+    def slower(self, frame):
         # only once every 15 frames, the slower counter goes up
         # there's probably a better way to do this
-
         if frame % 15 == 0:
             if self.slower >= 59:
                 self.slower = 0
