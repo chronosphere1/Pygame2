@@ -78,14 +78,11 @@ def map_contents(full_map):
 
 # player hits x button
 def x_action():
-    global local_map
-
-    print("Map location: {},{}".format(player.map_x, player.map_y))
 
     # what's on the map?
-    tile_terrain = local_map[player.map_x][player.map_y]
+    tile_terrain = Map.world_map[player.map_y][player.map_x]
 
-    Resources.x_action(tile_terrain)
+    Resources.x_action(player.map_x, player.map_y, tile_terrain)
 
 
 # create player

@@ -10,6 +10,8 @@ import random
 
 pygame.init()
 
+world_map = Map.world_map
+
 
 # make both the surf and rect render
 def text_objects(text, font):
@@ -112,7 +114,8 @@ class Move:
                 self.y_speed = 0
 
 
-def game_loop(world_map):
+def game_loop():
+    global world_map
     game_exit = False
     frame = 0
     move = Move()
@@ -191,7 +194,7 @@ def game_loop(world_map):
         Constants.game_display.fill(Constants.black)
 
         # draw map and grid
-        Map.display(world_map)
+        Map.display()
 
         # run machines
         Resources.machine_main()
@@ -207,10 +210,8 @@ def game_loop(world_map):
 
 
 def main():
-    # load map
-    world_map = Map.read_map(Constants.map_file)
 
-    game_loop(world_map)
+    game_loop()
 
 
 main()

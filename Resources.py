@@ -1,6 +1,7 @@
 import pygame
 import Button
 import Constants
+import Map
 import time
 
 
@@ -36,13 +37,12 @@ class Unit:
         if energy.amount >= self.cost:
             print("Increased {}".format(self.name))
             self.increase(1.0)
-            energy.decrease(10)
+            energy.decrease(self.cost)
             action_succeeded = True
         else:
             print("Not enough energy, need {}, have {}".format(self.cost, energy.amount))
 
         return action_succeeded
-
 
     def button_click(self):
         print("'{}' button clicked but nothing happened".format(self.name))
@@ -120,7 +120,7 @@ water = BaseResource("Water")
 sand = BaseResource("Sand")
 
 # set energy cost
-sand.cost = 10
+sand.cost = 1
 water.cost = 1
 
 # give some coin
@@ -132,14 +132,15 @@ def machine_main():
     energy.recalculate()
 
 
-def x_action(tile_terrain):
+def x_action(player_x, player_y, tile_terrain):
     if tile_terrain == "s":
         if sand.try_action():
-            pass
+            Map.change_map(player_x, player_y, "-")
 
     if tile_terrain == "-":
         if water.try_action():
-            pass
+            if water.try_action():
+                Map.change_map(player_x, player_y, "s")
 
     if tile_terrain == "x":
         print("Standing on deep water")

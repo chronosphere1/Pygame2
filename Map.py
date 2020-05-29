@@ -1,18 +1,40 @@
 import pygame
 import Constants
+
 import Units
 import random
 import time
 
 
 # main graphics function
-def display(world_map):
+def display():
+    global world_map
+
     # background, shouldn't be visible
     pygame.draw.rect(Constants.game_display, Constants.blue,
                      (Constants.FRAME_WIDTH, 0, Constants.FRAME_WIDTH,
                       Constants.FRAME_HEIGHT), 0)
     # draw map
     draw_map(world_map)
+
+
+# can change the world map
+def change_map(x, y, new_letter):
+    global world_map
+
+    # create a new list to put the new map contents in
+    rows, cols = (20, 40)
+    new_map = [[0 for i in range(cols)] for j in range(rows)]
+
+    # loop through the map, change when conditions are met
+    for y_grid, tile in enumerate(world_map):
+        for x_grid, tile_contents in enumerate(tile):
+            if x_grid == x and y_grid == y:
+                new_map[y_grid][x_grid] = new_letter
+            else:
+                new_map[y_grid][x_grid] = tile_contents
+
+    world_map = new_map
 
 
 class Tile:
@@ -48,10 +70,6 @@ class Tile:
 
 # draws a rectangle for every letter in map.txt
 def draw_map(map_tiles):
-    # create a list to put the map contents in
-    rows, cols = (20, 40)
-    map_contents = [[0 for i in range(rows)] for j in range(cols)]
-
     # loop through the map
     for y_grid, tile in enumerate(map_tiles):
         for x_grid, tile_contents in enumerate(tile):
@@ -60,9 +78,6 @@ def draw_map(map_tiles):
             y_pos = (y_grid * Constants.BLOCK_HEIGHT)
 
             individual_tile = Tile()
-
-            # add to map contents
-            map_contents[x_grid][y_grid] = tile_contents
 
             # get tile colours
             tile_colour = individual_tile.get_tile_colour(tile_contents)
@@ -86,12 +101,10 @@ def draw_map(map_tiles):
                                  Constants.BLOCK_HEIGHT - 6)
             pygame.draw.rect(Constants.game_display, tile_colour, block3)
 
-    # send the map
-    Units.map_contents(map_contents)
-
 
 # read map
 def read_map(map_file):
+    global world_map
     try:
         with open(map_file, 'r') as f:
             world_map = f.readlines()
@@ -102,3 +115,6 @@ def read_map(map_file):
     except OSError:
         print("Exit - Can't find map file: map.txt.")
         quit()
+
+
+world_map = read_map(Constants.map_file)
