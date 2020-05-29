@@ -139,8 +139,7 @@ def x_action(player_x, player_y, tile_terrain):
 
     if tile_terrain == "-":
         if water.try_action():
-            if water.try_action():
-                Map.change_map(player_x, player_y, "s")
+            Map.change_map(player_x, player_y, "s")
 
     if tile_terrain == "x":
         print("Standing on deep water")
