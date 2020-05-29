@@ -6,10 +6,11 @@ import time
 
 class Unit:
     # set resource start amount
-    amount = 0
+    amount = 0.0
 
     def __init__(self, name):
         self.name = name
+        self.cost = 10
         self.max = 20.0
         self.base_increase = 1/60
         self.text_colour = Constants.white
@@ -28,15 +29,23 @@ class Unit:
             self.amount -= decrease_amount
         # else set to 0
         else:
-            self.amount = 0
+            self.amount = 0.0
+
+    def try_action(self):
+        action_succeeded = False
+        if energy.amount >= self.cost:
+            print("Increased {}".format(self.name))
+            self.increase(1.0)
+            energy.decrease(10)
+            action_succeeded = True
+        else:
+            print("Not enough energy, need {}, have {}".format(self.cost, energy.amount))
+
+        return action_succeeded
+
 
     def button_click(self):
-        if self == dirty_water:
-            self.increase(1)
-        elif self == water:
-            water_button()
-        else:
-            print("'{}' button clicked but nothing happened".format(self.name))
+        print("'{}' button clicked but nothing happened".format(self.name))
 
 
 # resources class
@@ -107,10 +116,12 @@ class Energy(BaseResource):
 resources_list = []
 coin = BaseResource("Coin")
 energy = Energy("Energy")
-dirty_water = BaseResource("Dirty Water")
 water = BaseResource("Water")
 sand = BaseResource("Sand")
 
+# set energy cost
+sand.cost = 10
+water.cost = 1
 
 # give some coin
 coin.amount = 1
@@ -118,22 +129,20 @@ coin.amount = 1
 
 # does a certain amount of things per tick
 def machine_main():
-    dirty_water.increase(dirty_water.base_increase)
     energy.recalculate()
 
 
-def water_button():
-    water_cost = 20.0
-    energy_cost = 10
-    if (dirty_water.amount >= water_cost
-            and energy.amount >= energy_cost):
-        water.increase(1)
-        dirty_water.decrease(20)
-        energy.decrease(10)
+def x_action(tile_terrain):
+    if tile_terrain == "s":
+        if sand.try_action():
+            pass
 
+    if tile_terrain == "-":
+        if water.try_action():
+            pass
 
-def electrolyse_button():
-    pass
+    if tile_terrain == "x":
+        print("Standing on deep water")
 
 
 # button click

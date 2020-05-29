@@ -23,20 +23,20 @@ def random_colour_generator():
 class RandomColour:
     def __init__(self):
         self.rgb_colour = (255, 0, 255)
-        self.slower = 0
+        self.slower_count = 0
 
     def slower(self, frame):
         # only once every 15 frames, the slower counter goes up
         # there's probably a better way to do this
         if frame % 15 == 0:
-            if self.slower >= 59:
-                self.slower = 0
+            if self.slower_count >= 59:
+                self.slower_count = 0
             else:
-                self.slower += 1
+                self.slower_count += 1
 
-        rgb_colour = colour_array[self.slower]
+        self.rgb_colour = colour_array[self.slower_count]
 
-        return rgb_colour
+        return self.rgb_colour
 
 
 # create player colour

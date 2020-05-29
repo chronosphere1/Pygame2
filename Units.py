@@ -2,6 +2,7 @@ import pygame
 import Constants
 import Map
 import Randoms
+import Resources
 
 local_map = []
 
@@ -12,13 +13,29 @@ class Unit:
         self.amount = 1
         self.x = x
         self.y = y
-        self.map_x = x
-        self.may_y = y
+        self.x_border = 0.0
+        self.y_border = 0.0
+        self.map_x = 1
+        self.map_y = 1
 
         self.colour = (255, 0, 255)
 
         # creates a rectangle of the player size
         self.rect = (20, 20)
+
+    def update_grid_location(self):
+        # Current X plus half of the width of the player size, divided by block height
+        # this puts the 'location' at the center of the player image
+        self.map_x = (self.x + player.rect[0] / 2) / Constants.BLOCK_HEIGHT
+        self.map_y = (self.y + player.rect[0] / 2) / Constants.BLOCK_WIDTH
+
+        # determine how far the player is from the grid border
+        self.x_border = self.map_x - int(self.map_x)
+        self.y_border = self.map_y - int(self.map_y)
+
+        # get rid of decimal of grid location
+        self.map_x = int(self.map_x)
+        self.map_y = int(self.map_y)
 
     # draw the player
     def draw_player(self, frame):
@@ -62,37 +79,14 @@ def map_contents(full_map):
 # player hits x button
 def x_action():
     global local_map
-    # Current X plus half of the width of the player size, divided by block height
-    # this puts the 'location' at the center of the player image
-    map_x = (player.x + player.rect[0] / 2) / Constants.BLOCK_HEIGHT
-    map_y = (player.y + player.rect[0] / 2) / Constants.BLOCK_WIDTH
 
-    # determine how far the player is from the grid border
-    x_border = map_x - int(map_x)
-    y_border = map_y - int(map_y)
-
-    # convert to a grid number by removing decimals
-    grid_x = min(int(map_x), 39)  # max 40
-    grid_y = min(int(map_y), 19)  # max 20
+    print("Map location: {},{}".format(player.map_x, player.map_y))
 
     # what's on the map?
-    tile_terrain = local_map[grid_x][grid_y]
+    tile_terrain = local_map[player.map_x][player.map_y]
 
-    # if within 20% of the edge, ignore
-    if x_border < 0.1 or x_border > 0.9\
-            or y_border < 0.1 or y_border > 0.9:
-        print("map location {},{}".format(grid_x, grid_y))
-        print("too close to the border")
-
-    else:
-        print("map location {},{}".format(grid_x, grid_y))
-        if tile_terrain == "s":
-            print("Standing on sand")
-
-
-def check_grid_location(x_grid, y_grid):
-    pass
+    Resources.x_action(tile_terrain)
 
 
 # create player
-player = Unit("Goku", x=300, y=300)
+player = Unit("Goku", x=600, y=300)

@@ -4,6 +4,7 @@ import Resources
 import Constants
 import Map
 import Units
+import math
 import sys
 import random
 
@@ -44,29 +45,71 @@ def draw_everything(frame):
 
 class Move:
     def __init__(self):
-        self.x_change = 0
-        self.y_change = 0
+        self.x_speed = 0
+        self.y_speed = 0
         self.key_down = 0.0
+        self.max_speed = 1.5
+        self.stop_speed = 1
+        self.x_slow = True
+        self.y_slow = True
 
-    def change(self, keys_pressed):
+    def x_move(self, keys_pressed):
         if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
-            self.x_change = 0  # nothing
+            self.x_slow = True
         elif keys_pressed[pygame.K_LEFT]:
-            self.x_change = -1
+            self.x_speed -= self.max_speed
+            self.x_slow = False
         elif keys_pressed[pygame.K_RIGHT]:
-            self.x_change = 1
+            self.x_speed += self.max_speed
+            self.x_slow = False
         else:
-            self.x_change = 0
+            pass
 
+        # slow down if over max speed
+        if abs(self.x_speed) > self.max_speed:
+            self.x_speed *= 0.5
+
+    def y_move(self, keys_pressed):
         if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
-            self.y_change = 0
+            self.x_slow = True
         elif keys_pressed[pygame.K_UP]:
-            self.y_change = -1
+            self.y_speed -= self.max_speed
+            self.y_slow = False
         elif keys_pressed[pygame.K_DOWN]:
-            self.y_change = 1
+            self.y_speed += self.max_speed
+            self.y_slow = False
         else:
-            self.y_change = 0
+            pass
 
+        # slow down if over max speed
+        if abs(self.y_speed) > self.max_speed:
+            self.y_speed *= 0.5
+
+    # slow down the player slowly
+    def slow_down(self):
+        slow_down_multiplier = 1 / 5
+
+        if self.x_slow:
+            # decrease/increase depending if the value is under 0
+            # increase by square root of current number times multiplier
+            if self.x_speed >= 0:
+                self.x_speed -= math.sqrt(self.x_speed) * slow_down_multiplier
+            else:
+                self.x_speed += math.sqrt(abs(self.x_speed)) * slow_down_multiplier
+
+            # stop completely if close to stopping
+            if -self.stop_speed < self.x_speed < self.stop_speed:
+                self.x_speed = 0
+
+        if self.y_slow:
+            if self.y_speed >= 0:
+                self.y_speed -= math.sqrt(self.y_speed) * slow_down_multiplier
+            else:
+                self.y_speed += math.sqrt(abs(self.y_speed)) * slow_down_multiplier
+
+            # stop completely if close to stopping
+            if -self.stop_speed < self.y_speed < self.stop_speed:
+                self.y_speed = 0
 
 
 def game_loop(world_map):
@@ -80,16 +123,32 @@ def game_loop(world_map):
                 pygame.quit()
                 quit()
 
-            # mouse position
-            pos = pygame.mouse.get_pos()
-
             # if any key is hit
             keys_pressed = pygame.key.get_pressed()
-            if keys_pressed[pygame.K_x]:
-                Units.x_action()
 
-            # calculate movement
-            move.change(keys_pressed)
+            if event.type == pygame.KEYDOWN:
+                if keys_pressed[pygame.K_LEFT] or keys_pressed[pygame.K_RIGHT] \
+                        or keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_DOWN]:
+                    move.x_move(keys_pressed)
+                    move.y_move(keys_pressed)
+
+                if keys_pressed[pygame.K_x]:
+                    Units.x_action()
+
+            # key unpressed
+            elif event.type == pygame.KEYUP:
+                if keys_pressed[pygame.K_LEFT] or keys_pressed[pygame.K_RIGHT]:
+                    move.x_slow = False
+                else:
+                    move.x_slow = True
+
+                if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_DOWN]:
+                    move.y_slow = False
+                else:
+                    move.y_slow = True
+
+            # mouse position
+            pos = pygame.mouse.get_pos()
 
             # checking the mouse for button click
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -102,14 +161,25 @@ def game_loop(world_map):
                 Resources.mouse_over(pos)
 
         # before moving, check if you've hit the edge, if not, move player
-        if (Units.player.x + move.x_change) <= (Constants.FRAME_WIDTH - Units.player.rect[0]) \
-                and (Units.player.x + move.x_change >= 0):
-            Units.player.x += move.x_change
-        if (Units.player.y + move.y_change) <= (Constants.FRAME_HEIGHT - Units.player.rect[1]) \
-                and (Units.player.y + move.y_change >= 0):
-            Units.player.y += move.y_change
+        # if you did hit the edge, bounce back
+        if (Units.player.x + move.x_speed) <= (Constants.FRAME_WIDTH - Units.player.rect[0]) \
+                and (Units.player.x + move.x_speed >= 0):
+            Units.player.x += move.x_speed
+        else:
+            move.x_speed = -move.x_speed  # reverse speed and half
+            move.x_slow = True
+        if (Units.player.y + move.y_speed) <= (Constants.FRAME_HEIGHT - Units.player.rect[1]) \
+                and (Units.player.y + move.y_speed >= 0):
+            Units.player.y += move.y_speed
+        else:
+            move.y_speed = -move.y_speed  # reverse speed and half
+            move.y_slow = True
 
-        # create check to see what tile you're on
+        # slow down player movement
+        move.slow_down()
+
+        # update tile you're on
+        Units.player.update_grid_location()
 
         # update frame number, 0 to 59?
         if frame >= 60:

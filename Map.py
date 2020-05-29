@@ -2,6 +2,7 @@ import pygame
 import Constants
 import Units
 import random
+import time
 
 
 # main graphics function
@@ -14,30 +15,35 @@ def display(world_map):
     draw_map(world_map)
 
 
-# uses the letters of map.txt to color the map
-def get_tile_colour(tile_contents):
-    tile_colour = Constants.black
-    if tile_contents == "x":
-        tile_colour = Constants.alt_blue
-    if tile_contents == "s":
-        tile_colour = Constants.orange
-    if tile_contents == "-":
-        tile_colour = Constants.blue
+class Tile:
+    def __init__(self):
+        self.tile_colour = (255, 0, 255)
+        self.lighter_colour = (255, 0, 255)
 
-    return tile_colour
+    # uses the letters of map.txt to color the map
+    def get_tile_colour(self, tile_contents):
+        self.tile_colour = Constants.black
+        if tile_contents == "x":
+            self.tile_colour = Constants.alt_blue
+        if tile_contents == "s":
+            self.tile_colour = Constants.orange
+        if tile_contents == "-":
+            self.tile_colour = Constants.blue
 
+        return self.tile_colour
 
-def get_alt_tile_colour(tile_colour):
-    # get lighter colour
-    lighter = []
+    def get_alt_tile_colour(self, tile_colour):
+        # get lighter colour
+        lighter = []
 
-    # loop through r, g, b and make each a bit lighter
-    for colour in tile_colour:
-        colour = min(255, colour + 20)
-        lighter.append(colour)
+        # loop through r, g, b and make each a bit lighter
+        for colour in tile_colour:
+            # small change of different colour
+            colour = min(255, colour + 30)
+            lighter.append(colour)
 
-    lighter_colour = tuple(lighter)
-    return lighter_colour
+        self.lighter_colour = tuple(lighter)
+        return self.lighter_colour
 
 
 # draws a rectangle for every letter in map.txt
@@ -53,12 +59,14 @@ def draw_map(map_tiles):
             x_pos = (x_grid * Constants.BLOCK_WIDTH)
             y_pos = (y_grid * Constants.BLOCK_HEIGHT)
 
+            individual_tile = Tile()
+
             # add to map contents
             map_contents[x_grid][y_grid] = tile_contents
 
             # get tile colours
-            tile_colour = get_tile_colour(tile_contents)
-            lighter_colour = get_alt_tile_colour(tile_colour)
+            tile_colour = individual_tile.get_tile_colour(tile_contents)
+            lighter_colour = individual_tile.get_alt_tile_colour(tile_colour)
 
             # draw darker square first
             block1 = pygame.Rect(x_pos, y_pos,
@@ -78,7 +86,6 @@ def draw_map(map_tiles):
                                  Constants.BLOCK_HEIGHT - 6)
             pygame.draw.rect(Constants.game_display, tile_colour, block3)
 
-
     # send the map
     Units.map_contents(map_contents)
 
@@ -95,25 +102,3 @@ def read_map(map_file):
     except OSError:
         print("Exit - Can't find map file: map.txt.")
         quit()
-
-# # draw a grid on top
-# def grid():
-#     for x in range(0, 20):
-#         # vertical line starting top, each iteration 10% further to east
-#         vertical_start_line = [Constants.FRAME_WIDTH / 20 * x, 0]
-#         vertical_end_line = [Constants.FRAME_WIDTH / 20 * x, Constants.FRAME_HEIGHT]
-#         # horizontal line starting top, each iteration 10% further to south
-#         horizontal_start_line = [0, Constants.FRAME_WIDTH / 20 * x]
-#         horizontal_end_line = [Constants.FRAME_WIDTH, Constants.FRAME_WIDTH / 20 * x]
-#
-#         pygame.draw.line(Constants.game_display,
-#                          Constants.black,
-#                          vertical_start_line,
-#                          vertical_end_line,
-#                          1)
-#
-#         pygame.draw.line(Constants.game_display,
-#                          Constants.black,
-#                          horizontal_start_line,
-#                          horizontal_end_line,
-#                          1)
