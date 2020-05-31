@@ -14,24 +14,24 @@ pygame.init()
 world_map = Map.world_map
 
 
-# make both the surf and rect render
-def text_objects(text, font):
-    text_surface = font.render(text, True, Constants.red)
-    return text_surface, text_surface.get_rect()
-
-
-def message_display(text):
-    large_text = pygame.font.Font('freesansbold.ttf', 115)
-    text_surf, text_rect = text_objects(text, large_text)
-    # starting position, 20% width, 10% height
-    text_rect.center = Constants.WIDTH_20_PERCENT, Constants.HEIGHT_10_PERCENT
-    Constants.game_display.blit(text_surf, text_rect)
-    # update display
-    pygame.display.update()
-    # wait 2 secs
-    time.sleep(2)
-    # start over
-    game_loop()
+# # make both the surf and rect render
+# def text_objects(text, font):
+#     text_surface = font.render(text, True, Constants.red)
+#     return text_surface, text_surface.get_rect()
+#
+#
+# def message_display(text):
+#     large_text = pygame.font.Font('freesansbold.ttf', 115)
+#     text_surf, text_rect = text_objects(text, large_text)
+#     # starting position, 20% width, 10% height
+#     text_rect.center = Constants.WIDTH_20_PERCENT, Constants.HEIGHT_10_PERCENT
+#     Constants.game_display.blit(text_surf, text_rect)
+#     # update display
+#     pygame.display.update()
+#     # wait 2 secs
+#     time.sleep(2)
+#     # start over
+#     game_loop()
 
 
 # draw everything
@@ -51,7 +51,7 @@ class Move:
         self.x_speed = 0
         self.y_speed = 0
         self.key_down = 0.0
-        self.max_speed = 1.5
+        self.max_speed = 2
         self.stop_speed = 1
         self.x_slow = True
         self.y_slow = True
@@ -74,7 +74,7 @@ class Move:
 
     def y_move(self, keys_pressed):
         if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
-            self.x_slow = True
+            self.y_slow = True
         elif keys_pressed[pygame.K_UP]:
             self.y_speed -= self.max_speed
             self.y_slow = False
@@ -136,14 +136,13 @@ def game_loop():
                     move.x_move(keys_pressed)
                     move.y_move(keys_pressed)
 
-                # main action
+                # main action with x
                 if keys_pressed[pygame.K_x]:
                     Units.x_action()
 
                 # menu opening with 'm'
                 if keys_pressed[pygame.K_m]:
                     Menu.menu_open_close()
-
 
             # key unpressed
             elif event.type == pygame.KEYUP:

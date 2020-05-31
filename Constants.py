@@ -47,7 +47,7 @@ see_through_white = (0, 0, 0, 150)
 
 # font
 def font(size):
-    return pygame.font.SysFont('freesansbold.ttf', size)
+    return pygame.font.SysFont('impact.ttf', size)
 
 
 # map file

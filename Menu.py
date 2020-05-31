@@ -34,26 +34,12 @@ class Menu:
             # draw a rectangle on top of the background colour, 2 pixel from the border
             pygame.draw.rect(self.menu_surface, Constants.see_through_blue, (1, 1, self.width - 2, self.height - 2), 3)
 
-            # create the grid on top of that
-            self.create_grid()
-
+            # display background
             Constants.game_display.blit(self.menu_surface, (self.x, self.y))
 
             self.add_resources()
 
         # pygame.draw.rect(menu_surface, self.color, (self.x, self.y, self.width, self.height), 0)
-
-    def create_grid(self):
-        for x in range(10):
-            for y in range(20):
-                color = self.color
-                if x in range(0, 10) and y in range(0, 2):
-                    color = Constants.see_through_white
-                    rect = pygame.Rect(x * Constants.BLOCK_WIDTH,
-                                       y * Constants.BLOCK_HEIGHT,
-                                       Constants.BLOCK_WIDTH,
-                                       Constants.BLOCK_HEIGHT)
-                    pygame.draw.rect(self.menu_surface, color, rect, 0)
 
     # add the name, amount and button per resource
     def add_resources(self):
@@ -69,35 +55,35 @@ class Menu:
                                                i * Constants.BLOCK_HEIGHT + 7))
 
             # get resource amount
-            resource_amount = font.render(str(round(resource.amount, 2)), 1, (195, 195, 195))
+            resource_amount = font.render(str(round(resource.amount, 1)), 1, (195, 195, 195))
 
             # display resource amount
-            Constants.game_display.blit(resource_amount, (start_x + Constants.BLOCK_WIDTH * 4,
+            Constants.game_display.blit(resource_amount, (start_x + Constants.BLOCK_WIDTH * 3,
                                                           i * Constants.BLOCK_HEIGHT + 7))
 
+            # create sell buttons
             self.sell_button(i, start_x)
 
     def sell_button(self, i, start_x):
         # create machine button
         button = Button.Button(color=(220, 220, 220),
-                               x=start_x + Constants.BLOCK_WIDTH * 6,
+                               x=start_x + Constants.BLOCK_WIDTH * 5,
                                y=Constants.BLOCK_WIDTH * i,
-                               width=Constants.BLOCK_WIDTH * 3,
+                               width=Constants.BLOCK_WIDTH * 2,
                                height=Constants.BLOCK_HEIGHT,
-                               text="Sell")
+                               text="Buy")
 
         button.draw(Constants.game_display)
-
 
     def soft_open(self):
         self.time_since_active += 1
 
-        # if the menu is on the right of the endpoint
-        if self.x >= (Constants.FRAME_WIDTH / 4 * 3) + 15:
+        # if the menu is on the right of the endpoint + 15 pixels
+        if self.x >= int((Constants.FRAME_WIDTH / 4 * 3) + 15):
             # formula how much the menu is moving
             self.x -= int(math.sqrt(self.time_since_active)
-                          * (self.time_since_active / 5)
-                          - (self.time_since_active / 1.5))
+                          * (self.time_since_active / 4)
+                          - (self.time_since_active / 1.5)) + 0.5
         else:
             self.x -= 0.35
             # the end location is met, stop opening
