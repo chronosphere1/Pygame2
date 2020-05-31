@@ -5,6 +5,7 @@ import Constants
 import Map
 import Units
 import math
+import Menu
 import sys
 import random
 
@@ -135,8 +136,14 @@ def game_loop():
                     move.x_move(keys_pressed)
                     move.y_move(keys_pressed)
 
+                # main action
                 if keys_pressed[pygame.K_x]:
                     Units.x_action()
+
+                # menu opening with 'm'
+                if keys_pressed[pygame.K_m]:
+                    Menu.menu_open_close()
+
 
             # key unpressed
             elif event.type == pygame.KEYUP:
@@ -202,6 +209,9 @@ def game_loop():
         # draw units and buttons and resource amount
         draw_everything(frame)
 
+        # draw menu if they're active
+        Menu.main_menu.draw(Constants.game_display)
+
         # show what's happening
         pygame.display.update()
 
@@ -210,7 +220,6 @@ def game_loop():
 
 
 def main():
-
     game_loop()
 
 

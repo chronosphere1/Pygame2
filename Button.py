@@ -1,4 +1,5 @@
 import pygame
+import Constants
 
 
 # button class
@@ -16,7 +17,7 @@ class Button:
         pygame.draw.rect(game_display, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
-            font = pygame.font.SysFont('freesansbold.ttf', 30)
+            font = Constants.font(28)
             text = font.render(self.text, 1, (0, 0, 0))
             game_display.blit(text, (self.x + int((self.width / 2 - text.get_width() / 2)),
                                      self.y + int((self.height / 2 - text.get_height() / 2))))

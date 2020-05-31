@@ -40,6 +40,14 @@ alt_blue = (62, 67, 206)
 dark_blue = (31, 52, 103)
 orange = (255, 189, 51)
 brown = (103, 87, 31)
+see_through_blue = (62, 103, 206, 200)
+see_through_dark_blue = (31, 52, 103, 150)
+see_through_white = (0, 0, 0, 150)
+
+
+# font
+def font(size):
+    return pygame.font.SysFont('freesansbold.ttf', size)
 
 
 # map file
