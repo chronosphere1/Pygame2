@@ -1,6 +1,7 @@
 import pygame
 import time
 import Resources
+import Tooltips
 import Constants
 import Map
 import Units
@@ -41,6 +42,9 @@ def draw_everything(frame):
         resource.button.draw(Constants.game_display)
         # display the amounts
         resource.display_amount()
+        # draw the tooltips
+        Tooltips.tooltip.draw()
+
 
     # draw player
     Units.make_player(frame)

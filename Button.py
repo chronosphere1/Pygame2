@@ -1,5 +1,6 @@
 import pygame
 import Constants
+import Tooltips
 
 
 # button class
@@ -26,6 +27,8 @@ class Button:
         # Pos is the mouse position or a tuple of (x,y) coordinates
         if self.x < pos[0] < self.x + self.width:
             if self.y < pos[1] < self.y + self.height:
+                # update the tooltip
+                Tooltips.tooltip.show_tooltip(self.text, pos)
                 return True
         return False
 

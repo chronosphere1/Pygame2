@@ -105,22 +105,4 @@ def menu_open_close():
         main_menu.opening = False
         main_menu.time_since_active = 0
 
-
-# # button click
-# def button_click(pos):
-#     for resource in Resources.resources_list:
-#         if resource.button.is_over(pos):
-#             # trigger the button click
-#             print(f"Menu button{resource.name}")
-#
-#
-# # button mouse over
-# def mouse_over(pos):
-#     for resource in Resources.resources_list:
-#         if resource.button.is_over(pos):
-#             resource.button.color = (195, 195, 195)
-#         else:
-#             resource.button.color = (220, 220, 220)
-
-
 main_menu = Menu()
