@@ -38,9 +38,13 @@ def change_map(x, y, new_letter):
 
 
 class Tile:
-    def __init__(self):
+    def __init__(self, x, y):
         self.tile_colour = (255, 0, 255)
         self.lighter_colour = (255, 0, 255)
+        self.x = x
+        self.y = y
+        self.sand = 20
+        self.max = 20
 
     # uses the letters of map.txt to color the map
     def get_tile_colour(self, tile_contents):
@@ -77,7 +81,8 @@ def draw_map(map_tiles):
             x_pos = (x_grid * Constants.BLOCK_WIDTH)
             y_pos = (y_grid * Constants.BLOCK_HEIGHT)
 
-            individual_tile = Tile()
+            # create the tile contents
+            individual_tile = Tile(x_grid, y_grid)
 
             # get tile colours
             tile_colour = individual_tile.get_tile_colour(tile_contents)
@@ -115,6 +120,18 @@ def read_map(map_file):
     except OSError:
         print("Exit - Can't find map file: map.txt.")
         quit()
+
+
+# initialised the map
+def initialise_map(map_tiles):
+    # loop through the map
+    for y_grid, tile in enumerate(map_tiles):
+        for x_grid, tile_contents in enumerate(tile):
+            x_pos = (x_grid * Constants.BLOCK_WIDTH)
+            y_pos = (y_grid * Constants.BLOCK_HEIGHT)
+
+            # create the tile contents
+            individual_tile = Tile(x_grid, y_grid)
 
 
 world_map = read_map(Constants.map_file)
