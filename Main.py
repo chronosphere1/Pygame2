@@ -12,7 +12,6 @@ import random
 
 pygame.init()
 
-world_map = Map.world_map
 
 
 # # make both the surf and rect render
@@ -34,7 +33,6 @@ world_map = Map.world_map
 #     # start over
 #     game_loop()
 
-
 # draw everything
 def draw_everything(frame):
     for resource in Resources.resources_list:
@@ -44,7 +42,6 @@ def draw_everything(frame):
         resource.display_amount()
         # draw the tooltips
         Tooltips.tooltip.draw()
-
 
     # draw player
     Units.make_player(frame)
@@ -120,7 +117,6 @@ class Move:
 
 
 def game_loop():
-    global world_map
     game_exit = False
     frame = 0
     move = Move()
@@ -203,7 +199,7 @@ def game_loop():
         # black background
         Constants.game_display.fill(Constants.black)
 
-        # draw map and grid
+        # draw map
         Map.display()
 
         # run machines
@@ -223,6 +219,9 @@ def game_loop():
 
 
 def main():
+    # initialise the map
+    Map.read_map(Constants.map_file)
+
     game_loop()
 
 

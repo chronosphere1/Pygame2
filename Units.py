@@ -80,7 +80,7 @@ def map_contents(full_map):
 def x_action():
 
     # what's on the map?
-    tile_terrain = Map.world_map[player.map_y][player.map_x]
+    tile_terrain = Map.map_tile_contents[player.map_x][player.map_y].tile_letter
 
     Resources.x_action(player.map_x, player.map_y, tile_terrain)
 
