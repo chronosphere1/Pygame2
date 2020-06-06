@@ -1,5 +1,6 @@
 import pygame
 import Constants
+import Textbox
 
 import Units
 import random
@@ -34,6 +35,8 @@ class Tile:
         self.tile_letter = tile_letter
 
         self.sand = 0
+        self.water = 0
+
         self.max = 20
 
         self.tile_colour = (255, 0, 255)
@@ -43,10 +46,12 @@ class Tile:
     def get_tile_colour(self):
         if self.tile_letter == "x":
             self.tile_colour = Constants.alt_blue
-        if self.tile_letter == "s":
+        elif self.tile_letter == "s":
             self.tile_colour = Constants.orange
-        if self.tile_letter == "-":
+        elif self.tile_letter == "-":
             self.tile_colour = Constants.blue
+        elif self.tile_letter == "r":
+            self.tile_colour = Constants.alt_brown
 
         # get lighter colour
         lighter = []  # temp list to store colour in
@@ -66,8 +71,16 @@ class Tile:
     def dig_sand(self):
         self.sand -= 1
         if self.sand == 0:
-            self.change_tile_letter("-")
+            Textbox.textbox.add_message(f"Under the sand you found rock")
+            self.change_tile_letter("r")
         return True
+
+    def dig_shallow_water(self):
+        self.water -= 1
+        if self.water == 0:
+            Textbox.textbox.add_message(f"Under the water you found sand")
+            self.change_tile_letter("s")
+            self.sand = 20
 
 
 # draws a rectangle for every tile
@@ -125,7 +138,9 @@ def initialise_map(world_map):
         for x_grid, tile_contents in enumerate(tile):
             # if sand, add 20 sand to the tile
             if tile_contents == "s":
-                map_tile_contents[x_grid][y_grid].sand = 5
+                map_tile_contents[x_grid][y_grid].sand = 10
+            elif tile_contents == "-":
+                map_tile_contents[x_grid][y_grid].water = 10
 
             # add the tile contents
             map_tile_contents[x_grid][y_grid].change_tile_letter(tile_contents)

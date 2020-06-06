@@ -6,7 +6,9 @@ import Tooltips
 # button class
 class Button:
     def __init__(self, color, x, y, width, height, text=''):
+        self.base_color = color
         self.color = color
+        self.light_color = Constants.light_blue
         self.x = int(x)
         self.y = int(y)
         self.width = int(width)
@@ -14,12 +16,15 @@ class Button:
         self.text = text
 
     def draw(self, game_display):
-        # Call this method to draw the button on the screen
+        # draw a rectangle
         pygame.draw.rect(game_display, self.color, (self.x, self.y, self.width, self.height), 0)
+
+        # draw a rectangle with a border of 2 on top
+        pygame.draw.rect(game_display, self.light_color, (self.x + 1, self.y + 1, self.width - 3, self.height - 3), 2)
 
         if self.text != '':
             font = Constants.font(28)
-            text = font.render(self.text, 1, (0, 0, 0))
+            text = font.render(self.text, 1, Constants.light_grey)
             game_display.blit(text, (self.x + int((self.width / 2 - text.get_width() / 2)),
                                      self.y + int((self.height / 2 - text.get_height() / 2))))
 

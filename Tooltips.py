@@ -30,10 +30,10 @@ class Tooltip:
     def show_tooltip(self, button_text, pos):  # pos = x, y
         if button_text in tooltips:
             self.visible = True
-            self.x = pos[0]
-            self.y = pos[1]
+            self.x = Constants.BLOCK_WIDTH * 6
+            self.y = (pos[1] // 30) * 30 + 15
             self.text = tooltips[button_text]
-            self.time = 360
+            self.time = 150
 
     def draw(self):
         if self.time > 1:
@@ -44,16 +44,11 @@ class Tooltip:
         if self.visible:
             # put some text on top
             font = Constants.font(24)
-            text = font.render(self.text, 1, (255, 255, 255))
+            text = font.render(self.text, 1, Constants.light_grey)
             text_rect = text.get_rect()
-            text_rect.center = (self.x + self.width, self.y)
+            text_rect.center = (self.x * 2, self.y)
 
             Constants.game_display.blit(text, text_rect)
-
-            # draw a rectangle
-            # pygame.draw.rect(self.surface, Constants.black, (0, 0, self.width, self.height), 1)
-            # Constants.game_display.blit(self.surface, (self.x, self.y))
-
 
 
 tooltip = Tooltip()

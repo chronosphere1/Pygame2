@@ -26,7 +26,7 @@ class Textbox:
         font = Constants.font(22)
 
         for i, message in enumerate(self.messages[:13]):
-            text = font.render(message, True, Constants.white)
+            text = font.render(message, True, Constants.light_grey)
             # display text
             Constants.game_display.blit(text, (self.x + 2,
                                                Constants.DISPLAY_HEIGHT

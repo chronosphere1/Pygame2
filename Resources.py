@@ -11,10 +11,10 @@ class Unit:
     def __init__(self, name):
         self.name = name
         self.amount = 0.0
-        self.cost = 10
+        self.energy_cost = 10
         self.max = 20.0
         self.base_increase = 1/60
-        self.text_colour = Constants.white
+        self.text_colour = Constants.light_grey
 
     def increase(self, increase_amount):
         # if it's under the maximum amount, increase
@@ -35,33 +35,7 @@ class Unit:
     def button_click(self):
         print("'{}' button clicked but nothing happened".format(self.name))
 
-    # when the player is standing on sand and actions with main action
-    def sand_x_action(self, player_x, player_y):
-        # check if there's sand on the tile
-        if Map.map_tile_contents[player_x][player_y].sand > 0:
-            # increase sand
-            self.increase(1)
-
-            energy.decrease(self.cost)
-            Map.map_tile_contents[player_x][player_y].dig_sand()
-
-            Textbox.textbox.add_message(f"Found sand! Sand left: {Map.map_tile_contents[player_x][player_y].sand}")
-
         # when the player is standing on sand and actions with main action
-
-    def shallow_water_x_action(self):
-        if self.amount < self.max:
-            # roll
-            roll = round(random.random() / 2, 1)
-            Textbox.textbox.add_message(f"Found water and also {roll} sand")
-            # increase sand
-            sand.increase(round(roll, 1))
-
-            self.increase(1)
-
-            energy.decrease()
-        else:
-            Textbox.textbox.add_message(f"Too much water, get rid of your water")
 
 
 # resources class
@@ -75,46 +49,21 @@ class BaseResource(Unit):
         self.order = resources_list.index(self)
 
         # create resource button
-        self.button = Button.Button(color=(220, 220, 220),
+        self.button = Button.Button(color=Constants.dark_blue,
                                     x=0,
-                                    y=self.order * Constants.HEIGHT_5_PERCENT,
+                                    y=self.order * Constants.BLOCK_HEIGHT,
                                     width=Constants.WIDTH_10_PERCENT,
-                                    height=Constants.HEIGHT_5_PERCENT,
+                                    height=Constants.BLOCK_HEIGHT,
                                     text=name)
 
     # display the resource amount
     def display_amount(self):
-        font = pygame.font.SysFont(None, 30)
+        font = Constants.font(30)
         # display amount as text, rounded to 1 digit
         text = font.render(str(round(self.amount, 1)), True, self.text_colour)
-        x_pos = Constants.WIDTH_10_PERCENT + 10
-        y_pos = Constants.HEIGHT_5_PERCENT * self.order + Constants.HEIGHT_5_PERCENT * .25
+        x_pos = Constants.WIDTH_10_PERCENT + 7
+        y_pos = Constants.BLOCK_HEIGHT * self.order + 7
         Constants.game_display.blit(text, (x_pos, y_pos))
-
-
-# machine class
-class BaseMachine(Unit):
-    def __init__(self, name):
-        # call base resources
-        super().__init__(name)
-
-        # set machine cost
-        self.cost = 1
-
-        # create machine button
-        self.button = Button.Button(color=(220, 220, 220),
-                                    x=Constants.DISPLAY_WIDTH / 2,
-                                    y=Constants.DISPLAY_HEIGHT / 2,
-                                    width=Constants.WIDTH_10_PERCENT,
-                                    height=Constants.HEIGHT_10_PERCENT,
-                                    text=name)
-
-    def machine_click(self):
-        # check for conditions if the building can be placed
-        if coin.amount >= self.cost:
-            coin.amount -= self.cost
-        else:
-            print("Not enough coin, needed {} but have only {}".format(self.cost, coin. amount))
 
 
 # energy class
@@ -127,17 +76,80 @@ class Energy(BaseResource):
     def recalculate(self):
         self.increase(self.base_increase)
 
+    def energy_check(self, resource):
+        if self.amount > resource.energy_cost:
+            return True
+        else:
+            Textbox.textbox.add_message(f"Not enough energy to dig {resource.name.lower()}, "
+                                        f"need at least {resource.energy_cost}")
+            return False
 
-# create the base resources; name, position
+
+# sand class where all the sand interactions go
+class Sand(BaseResource):
+    def __init__(self):
+        # call base Resource
+        super().__init__("Sand")
+
+    # when the player is standing on sand and actions with main action
+    def sand_x_action(self, player_x, player_y):
+        # check if enough energy
+        if energy.energy_check(self):
+            # check if not full
+            if self.amount < self.max:
+                # check if there's sand on the tile
+                if Map.map_tile_contents[player_x][player_y].sand > 0 and \
+                        self.amount < self.max:
+                    # increase sand
+                    Textbox.textbox.add_message(f"+1 sand! Sand left: {Map.map_tile_contents[player_x][player_y].sand}")
+                    self.increase(1)
+
+                    energy.decrease(self.energy_cost)
+                    Map.map_tile_contents[player_x][player_y].dig_sand()
+            else:
+                Textbox.textbox.add_message(f"You want to dig sand, but you can't carry more than {self.max}")
+
+
+class Water(BaseResource):
+    def __init__(self):
+        # call base Resource
+        super().__init__("Water")
+
+    def shallow_water_x_action(self, player_x, player_y):
+        if self.amount < self.max:
+            roll = max(round(random.random() / 2, 1), 0.1)  # minimum of 0.1
+
+            # increase sand
+            if sand.amount < sand.max:
+                sand.increase(round(roll, 1))
+                Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand")
+            else:
+                Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand, "
+                                            f"but you don't have room for more sand")
+
+            # remove water
+            Map.map_tile_contents[player_x][player_y].dig_shallow_water()
+
+            self.increase(1)
+            energy.decrease()
+        else:
+            Textbox.textbox.add_message(f"Too much water, get rid of your water")
+
+    def dump_water(self):
+        Textbox.textbox.add_message(f"You dump all your water, probably in the ocean")
+        self.amount = 0.0
+
+
+# create the resources
 resources_list = []
 coin = BaseResource("Coin")
 energy = Energy("Energy")
-water = BaseResource("Water")
-sand = BaseResource("Sand")
+water = Water()
+sand = Sand()
 
 # set energy cost
-sand.cost = 1
-water.cost = 1
+sand.energy_cost = 1
+water.energy_cost = 1
 
 # give some coin
 coin.amount = 1
@@ -151,27 +163,29 @@ def machine_main():
 def x_action(player_x, player_y, tile_terrain):
     if tile_terrain == "s":
         sand.sand_x_action(player_x, player_y)
-
-    if tile_terrain == "-":
-        water.shallow_water_x_action()
-
-    if tile_terrain == "x":
-        print("Standing on deep water")
+    elif tile_terrain == "-":
+        water.shallow_water_x_action(player_x, player_y)
+    elif tile_terrain == "x":
+        Textbox.textbox.add_message("Standing on deep water")
 
 
 # button click
 def button_click(pos):
     for resource in resources_list:
         if resource.button.is_over(pos):
-            # trigger the button click
-            resource.button_click()
+            if resource == water:
+                water.dump_water()
+            else:
+                # trigger the button click
+                resource.button_click()
 
 
 # button mouse over
 def mouse_over(pos):
     for resource in resources_list:
         if resource.button.is_over(pos):
-            resource.button.color = (195, 195, 195)
+            resource.button.color = resource.button.light_color  # lighter
         else:
-            resource.button.color = (220, 220, 220)
+            resource.button.color = resource.button.base_color
+
 
