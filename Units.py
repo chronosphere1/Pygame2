@@ -78,10 +78,10 @@ def map_contents(full_map):
 
 # player hits x button
 def x_action():
-
     # what's on the map?
     tile_terrain = Map.map_tile_contents[player.map_x][player.map_y].tile_letter
 
+    # do a little action on the tile, depending on what terrain we're on
     Resources.x_action(player.map_x, player.map_y, tile_terrain)
 
 

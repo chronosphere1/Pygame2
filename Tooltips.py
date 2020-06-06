@@ -5,7 +5,8 @@ import Constants
 
 tooltips = {
     "Coin": "This is how much coin you have",
-    "Energy": "You need this to power things"
+    "Energy": "You need this to power things",
+    "Water": "Too much water is probably a bad thing"
 }
 
 tip_width = Constants.BLOCK_WIDTH * 10
@@ -32,7 +33,7 @@ class Tooltip:
             self.x = pos[0]
             self.y = pos[1]
             self.text = tooltips[button_text]
-            self.time = 60
+            self.time = 360
 
     def draw(self):
         if self.time > 1:
@@ -56,9 +57,3 @@ class Tooltip:
 
 
 tooltip = Tooltip()
-
-# if self.text != '':
-#     font = Constants.font(28)
-#     text = font.render(self.text, 1, (0, 0, 0))
-#     game_display.blit(text, (self.x + int((self.width / 2 - text.get_width() / 2)),
-#                              self.y + int((self.height / 2 - text.get_height() / 2))))

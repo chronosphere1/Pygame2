@@ -2,15 +2,15 @@ import pygame
 import Button
 import Constants
 import Map
+import random
+import Textbox
 import time
 
 
 class Unit:
-    # set resource start amount
-    amount = 0.0
-
     def __init__(self, name):
         self.name = name
+        self.amount = 0.0
         self.cost = 10
         self.max = 20.0
         self.base_increase = 1/60
@@ -24,7 +24,7 @@ class Unit:
         elif self.amount + increase_amount > self.max:
             self.amount = self.max
 
-    def decrease(self, decrease_amount):
+    def decrease(self, decrease_amount=1):
         # if the decrease amount doesn't take the total to under 0
         if self.amount - decrease_amount >= 0:
             self.amount -= decrease_amount
@@ -32,20 +32,36 @@ class Unit:
         else:
             self.amount = 0.0
 
-    def try_action(self):
-        action_succeeded = False
-        if energy.amount >= self.cost:
-            print("Increased {}".format(self.name))
-            self.increase(1.0)
-            energy.decrease(self.cost)
-            action_succeeded = True
-        else:
-            print("Not enough energy, need {}, have {}".format(self.cost, energy.amount))
-
-        return action_succeeded
-
     def button_click(self):
         print("'{}' button clicked but nothing happened".format(self.name))
+
+    # when the player is standing on sand and actions with main action
+    def sand_x_action(self, player_x, player_y):
+        # check if there's sand on the tile
+        if Map.map_tile_contents[player_x][player_y].sand > 0:
+            # increase sand
+            self.increase(1)
+
+            energy.decrease(self.cost)
+            Map.map_tile_contents[player_x][player_y].dig_sand()
+
+            Textbox.textbox.add_message(f"Found sand! Sand left: {Map.map_tile_contents[player_x][player_y].sand}")
+
+        # when the player is standing on sand and actions with main action
+
+    def shallow_water_x_action(self):
+        if self.amount < self.max:
+            # roll
+            roll = round(random.random() / 2, 1)
+            Textbox.textbox.add_message(f"Found water and also {roll} sand")
+            # increase sand
+            sand.increase(round(roll, 1))
+
+            self.increase(1)
+
+            energy.decrease()
+        else:
+            Textbox.textbox.add_message(f"Too much water, get rid of your water")
 
 
 # resources class
@@ -134,12 +150,10 @@ def machine_main():
 
 def x_action(player_x, player_y, tile_terrain):
     if tile_terrain == "s":
-        if sand.try_action():
-            Map.change_map(player_x, player_y, "-")
+        sand.sand_x_action(player_x, player_y)
 
     if tile_terrain == "-":
-        if water.try_action():
-            Map.change_map(player_x, player_y, "s")
+        water.shallow_water_x_action()
 
     if tile_terrain == "x":
         print("Standing on deep water")

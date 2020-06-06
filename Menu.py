@@ -13,7 +13,7 @@ class Menu:
     def __init__(self):
         self.active = False
         self.height = Constants.FRAME_HEIGHT
-        self.width = int(Constants.FRAME_WIDTH / 4)
+        self.width = Constants.FRAME_WIDTH // 4
         self.start_x = Constants.FRAME_WIDTH / 4 * 3 + (self.width * 0.55)
         self.x = self.start_x
         self.y = 0
@@ -23,7 +23,7 @@ class Menu:
         self.opening = False
         self.time_since_active = 0
 
-    def draw(self, game_display):
+    def draw(self):
         if self.active:
             # opens the menu slowly
             if self.opening:
@@ -104,5 +104,6 @@ def menu_open_close():
         main_menu.active = False
         main_menu.opening = False
         main_menu.time_since_active = 0
+
 
 main_menu = Menu()

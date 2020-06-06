@@ -21,8 +21,7 @@ def display():
 # can change the world map
 def change_map(x, y, new_letter):
     global map_tile_contents
-    map_tile_contents[x][y].tile_letter = new_letter
-    map_tile_contents[x][y].get_tile_colour()
+    map_tile_contents[x][y].change_tile_letter(new_letter)
 
 
 class Tile:
@@ -59,6 +58,16 @@ class Tile:
             lighter.append(colour)
 
         self.lighter_colour = tuple(lighter)
+
+    def change_tile_letter(self, new_tile):
+        self.tile_letter = new_tile
+        self.get_tile_colour()
+
+    def dig_sand(self):
+        self.sand -= 1
+        if self.sand == 0:
+            self.change_tile_letter("-")
+        return True
 
 
 # draws a rectangle for every tile
@@ -116,21 +125,13 @@ def initialise_map(world_map):
         for x_grid, tile_contents in enumerate(tile):
             # if sand, add 20 sand to the tile
             if tile_contents == "s":
-                map_tile_contents[x_grid][y_grid].sand = 20
+                map_tile_contents[x_grid][y_grid].sand = 5
 
             # add the tile contents
-            map_tile_contents[x_grid][y_grid].tile_letter = tile_contents
-
-            # set tile colour
-            map_tile_contents[x_grid][y_grid].get_tile_colour()
+            map_tile_contents[x_grid][y_grid].change_tile_letter(tile_contents)
 
 
 # create a list of tiles to populate
 rows, cols = (20, 40)
 map_tile_contents = [[Tile(j, i, "x") for i in range(rows)] for j in range(cols)]
-
-
-
-
-
 

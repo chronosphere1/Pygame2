@@ -28,7 +28,7 @@ class RandomColour:
     def slower(self, frame):
         # only once every 15 frames, the slower counter goes up
         # there's probably a better way to do this
-        if frame % 15 == 0:
+        if frame % 30 == 0 or frame % 45 == 0:
             if self.slower_count >= 59:
                 self.slower_count = 0
             else:
