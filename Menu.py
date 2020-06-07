@@ -39,8 +39,6 @@ class Menu:
 
             self.add_resources()
 
-        # pygame.draw.rect(menu_surface, self.color, (self.x, self.y, self.width, self.height), 0)
-
     # add the name, amount and button per resource
     def add_resources(self):
         for i, resource in enumerate(Resources.resources_list):

@@ -8,20 +8,18 @@ import Units
 import math
 import Menu
 import Textbox
+import Actionbox
 import sys
 import random
 
 pygame.init()
 
-
-
-
 # draw everything
 def draw_everything(frame):
     for resource in Resources.resources_list:
-        # create the buttons
+        # create the resource buttons
         resource.button.draw(Constants.game_display)
-        # display the amounts
+        # display the resource amounts
         resource.display_amount()
         # draw the tooltips
         Tooltips.tooltip.draw()
@@ -34,6 +32,13 @@ def draw_everything(frame):
 
     # draw textbox
     Textbox.textbox.draw()
+
+    # draw bottom left action box
+    Actionbox.action_box.draw()
+
+    # draw action buttons
+    for action in Actionbox.action_list:
+        action.button.draw(Constants.game_display)
 
 
 class Move:
@@ -153,10 +158,12 @@ def game_loop():
                 # left mouse button
                 if event.button == 1:
                     Resources.button_click(pos)
+                    Actionbox.button_click(pos)
 
             # check mouse for hover
             if event.type == pygame.MOUSEMOTION:
                 Resources.mouse_over(pos)
+                Actionbox.mouse_over(pos)
 
         # before moving, check if you've hit the edge, if not, move player
         # if you did hit the edge, bounce back

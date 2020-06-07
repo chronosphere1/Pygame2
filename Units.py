@@ -85,5 +85,9 @@ def x_action():
     Resources.x_action(player.map_x, player.map_y, tile_terrain)
 
 
+def z_action():
+    Resources.water.dump_water()
+
+
 # create player
 player = Unit("Goku", x=600, y=300)

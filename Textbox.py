@@ -40,23 +40,3 @@ class Textbox:
 
 # load the textbox
 textbox = Textbox()
-
-
-# # make both the surf and rect render
-# def text_objects(text, font):
-#     text_surface = font.render(text, True, Constants.red)
-#     return text_surface, text_surface.get_rect()
-#
-#
-# def message_display(text):
-#     large_text = pygame.font.Font('freesansbold.ttf', 115)
-#     text_surf, text_rect = text_objects(text, large_text)
-#     # starting position, 20% width, 10% height
-#     text_rect.center = Constants.WIDTH_20_PERCENT, Constants.HEIGHT_10_PERCENT
-#     Constants.game_display.blit(text_surf, text_rect)
-#     # update display
-#     pygame.display.update()
-#     # wait 2 secs
-#     time.sleep(2)
-#     # start over
-#     game_loop()

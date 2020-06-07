@@ -36,11 +36,6 @@ class Tooltip:
             self.time = 150
 
     def draw(self):
-        if self.time > 1:
-            self.time -= 1
-        else:
-            self.visible = False
-
         if self.visible:
             # put some text on top
             font = Constants.font(24)
@@ -49,6 +44,10 @@ class Tooltip:
             text_rect.center = (self.x * 2, self.y)
 
             Constants.game_display.blit(text, text_rect)
+            if self.time > 1:
+                self.time -= 1
+            else:
+                self.visible = False
 
 
 tooltip = Tooltip()
