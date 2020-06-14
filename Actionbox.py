@@ -3,6 +3,7 @@ import Constants
 import pygame
 import Button
 import Units
+import Tooltips
 
 
 action_list = []
@@ -41,14 +42,14 @@ class ActionBox:
 
 
 class ActionButton:
-    def __init__(self, name):
+    def __init__(self, text_top, text_bottom=''):
         # add to action button list and set order
         action_list.append(self)
         self.order = action_list.index(self)
         self.base_color = Constants.dark_blue
         self.color = self.base_color
 
-        self.name = name
+        self.name = text_top
 
         # create button
         self.button = Button.Button(color=self.color,
@@ -56,7 +57,8 @@ class ActionButton:
                                     y=action_box.y,
                                     width=Constants.BLOCK_WIDTH * 2,
                                     height=Constants.BLOCK_HEIGHT * 2,
-                                    text=self.name,
+                                    text_top=text_top,
+                                    text_bottom=text_bottom,
                                     font_size=22)
 
     def draw_button(self):
@@ -80,6 +82,7 @@ def mouse_over(pos):
     global action_list
     for action in action_list:
         if action.button.is_over(pos):
+            # change colour
             action.button.color = Constants.light_blue
         else:
             action.button.color = action.button.base_color
@@ -89,6 +92,6 @@ def mouse_over(pos):
 action_box = ActionBox()
 
 # create some buttons
-z_action = ActionButton("Drop")
+z_action = ActionButton("Drop", "Water")
 x_action = ActionButton("Dig")
 

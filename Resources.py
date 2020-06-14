@@ -54,7 +54,7 @@ class BaseResource(Unit):
                                     y=self.order * Constants.BLOCK_HEIGHT,
                                     width=Constants.WIDTH_10_PERCENT,
                                     height=Constants.BLOCK_HEIGHT,
-                                    text=name)
+                                    text_top=name)
 
     # display the resource amount
     def display_amount(self):

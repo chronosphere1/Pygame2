@@ -69,7 +69,7 @@ class Menu:
                                y=Constants.BLOCK_WIDTH * i,
                                width=Constants.BLOCK_WIDTH * 2,
                                height=Constants.BLOCK_HEIGHT,
-                               text="Buy")
+                               text_top="Buy")
 
         button.draw(Constants.game_display)
 

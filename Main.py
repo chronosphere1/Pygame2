@@ -25,6 +25,7 @@ def draw_everything(frame):
         # draw the tooltips
         Tooltips.tooltip.draw()
 
+
     # draw player
     Units.make_player(frame)
 
@@ -47,8 +48,8 @@ class Move:
         self.x_speed = 0
         self.y_speed = 0
         self.key_down = 0.0
-        self.max_speed = 2
-        self.stop_speed = 1
+        self.max_speed = 1.5
+        self.stop_speed = 0.4
         self.x_slow = True
         self.y_slow = True
 
@@ -56,59 +57,41 @@ class Move:
         if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
             self.x_speed = 0.0
         elif keys_pressed[pygame.K_LEFT]:
-            self.x_speed = -self.max_speed
+            self.x_speed -= 0.5
             self.x_slow = False
         elif keys_pressed[pygame.K_RIGHT]:
-            self.x_speed = self.max_speed
+            self.x_speed += 0.5
             self.x_slow = False
         else:
             pass
-
-        # slow down if over max speed
-        if abs(self.x_speed) > self.max_speed:
-            self.x_speed *= 0.5
 
     def y_move(self, keys_pressed):
         if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
             self.y_speed = 0
         elif keys_pressed[pygame.K_UP]:
-            self.y_speed -= self.max_speed
+            self.y_speed -= 0.5
             self.y_slow = False
         elif keys_pressed[pygame.K_DOWN]:
-            self.y_speed += self.max_speed
+            self.y_speed += 0.5
             self.y_slow = False
         else:
             pass
 
-        # slow down if over max speed
-        if abs(self.y_speed) > self.max_speed:
-            self.y_speed *= 0.5
-
     # slow down the player slowly
     def slow_down(self):
-        slow_down_multiplier = 1 / 5
+        # slow down if over max speed
+        if abs(self.x_speed) > self.max_speed:
+            self.x_speed *= 0.995
+        # slow down if over max speed
+        if abs(self.y_speed) > self.max_speed:
+            self.y_speed *= 0.995
 
-        if self.x_slow:
-            # decrease/increase depending if the value is under 0
-            # increase by square root of current number times multiplier
-            if self.x_speed >= 0:
-                self.x_speed -= math.sqrt(self.x_speed) * slow_down_multiplier
-            else:
-                self.x_speed += math.sqrt(abs(self.x_speed)) * slow_down_multiplier
+        # stop if close to stopping, stops if under stop speed
+        if abs(self.x_speed) < self.stop_speed:
+            self.x_speed = 0
 
-            # stop completely if close to stopping
-            if -self.stop_speed < self.x_speed < self.stop_speed:
-                self.x_speed = 0
-
-        if self.y_slow:
-            if self.y_speed >= 0:
-                self.y_speed -= math.sqrt(self.y_speed) * slow_down_multiplier
-            else:
-                self.y_speed += math.sqrt(abs(self.y_speed)) * slow_down_multiplier
-
-            # stop completely if close to stopping
-            if -self.stop_speed < self.y_speed < self.stop_speed:
-                self.y_speed = 0
+        if abs(self.y_speed) < self.stop_speed:
+            self.y_speed = 0
 
 
 def game_loop():
@@ -138,18 +121,6 @@ def game_loop():
                 # menu opening with 'm'
                 if keys_pressed[pygame.K_m]:
                     Menu.menu_open_close()
-
-            # key unpressed
-            elif event.type == pygame.KEYUP:
-                if keys_pressed[pygame.K_LEFT] or keys_pressed[pygame.K_RIGHT]:
-                    move.x_slow = False
-                else:
-                    move.x_slow = True
-
-                if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_DOWN]:
-                    move.y_slow = False
-                else:
-                    move.y_slow = True
 
             elif event.type == pygame.KEYDOWN and event.type == event.type == pygame.KEYUP:
                 print("Up and down at the same time")
