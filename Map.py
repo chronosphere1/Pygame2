@@ -25,6 +25,11 @@ def change_map(x, y, new_letter):
     map_tile_contents[x][y].change_tile_letter(new_letter)
 
 
+def map_colour_changer(x, y):
+    map_tile_contents[x][y].super_light()
+
+
+
 class Tile:
     def __init__(self, x, y, tile_letter):
         self.x = x
@@ -41,6 +46,7 @@ class Tile:
 
         self.tile_colour = (255, 0, 255)
         self.lighter_colour = (255, 0, 255)
+        self.super_light_colour = (255, 0, 255)
 
     # uses the letters of map.txt to color the map
     def get_tile_colour(self):
@@ -55,14 +61,22 @@ class Tile:
 
         # get lighter colour
         lighter = []  # temp list to store colour in
+        lighter2 = []
 
         # loop through r, g, b and make each a bit lighter
         for colour in self.tile_colour:
             # small change of different colour
+            random_addition = random.randint(0, 30)
             colour = min(255, colour + 30)
+            colour2 = min(255, colour + random_addition )
             lighter.append(colour)
+            lighter2.append(colour2)
 
         self.lighter_colour = tuple(lighter)
+        self.super_light_colour = tuple(lighter2)
+
+    def super_light(self):
+        self.lighter_colour = self.super_light_colour
 
     def change_tile_letter(self, new_tile):
         self.tile_letter = new_tile
@@ -71,14 +85,14 @@ class Tile:
     def dig_sand(self):
         self.sand -= 1
         if self.sand == 0:
-            Textbox.textbox.add_message(f"Under the sand you found rock")
+            Textbox.textbox.add_message(f"Under the sand you find rock")
             self.change_tile_letter("r")
         return True
 
     def dig_shallow_water(self):
         self.water -= 1
         if self.water == 0:
-            Textbox.textbox.add_message(f"Under the water you found sand")
+            Textbox.textbox.add_message(f"Under the water you find sand")
             self.change_tile_letter("s")
             self.sand = 20
 
@@ -98,15 +112,15 @@ def draw_map(x, y):
     block1 = pygame.Rect(x_pos, y_pos,
                          Constants.BLOCK_WIDTH,
                          Constants.BLOCK_HEIGHT)
-    pygame.draw.rect(Constants.game_display, tile_colour, block1)
+    pygame.draw.rect(Constants.game_display, tile_colour, block1, 2)
 
     # draw lighter square on top
     block2 = pygame.Rect(x_pos + 1, y_pos + 1,
                          Constants.BLOCK_WIDTH - 2,
                          Constants.BLOCK_HEIGHT - 2)
     pygame.draw.rect(Constants.game_display, lighter_colour, block2)
-
-    # draw darker square on top
+    #
+    # # draw darker square on top
     block3 = pygame.Rect(x_pos + 3, y_pos + 3,
                          Constants.BLOCK_WIDTH - 6,
                          Constants.BLOCK_HEIGHT - 6)
@@ -146,7 +160,31 @@ def initialise_map(world_map):
             map_tile_contents[x_grid][y_grid].change_tile_letter(tile_contents)
 
 
+class Changer:
+    def __init__(self):
+        self.x = 20
+        self.y = 10
+
+    def change(self, x, y):
+        self.x = x
+        self.y = y
+
+        if self.x < 39:
+            map_colour_changer(self.x + 1, self.y + 0)
+        if self.y < 19:
+            map_colour_changer(self.x + 0, self.y + 1)
+        if self.x > 0:
+            map_colour_changer(self.x - 1, self.y + 0)
+        if self.y > 0:
+            map_colour_changer(self.x - 0, self.y - 1)
+
+        map_colour_changer(self.x, self.y)
+
+
 # create a list of tiles to populate
 rows, cols = (20, 40)
 map_tile_contents = [[Tile(j, i, "x") for i in range(rows)] for j in range(cols)]
+
+# load map changer
+change = Changer()
 

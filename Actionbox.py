@@ -3,6 +3,7 @@ import Constants
 import pygame
 import Button
 import Units
+import Resources
 import Tooltips
 
 
@@ -61,20 +62,17 @@ class ActionButton:
                                     text_bottom=text_bottom,
                                     font_size=22)
 
-    def draw_button(self):
-        pass
-
 
 # button click
 def button_click(pos):
     for action in action_list:
         if action.button.is_over(pos):
             if action == z_action:
-                Units.z_action()
+                Resources.water.dump_water()
             elif action == x_action:
                 Units.x_action()
-
-            print(f"Clicked on {action.name} button")
+            elif action == c_action:
+                Resources.sand.sell_sand()
 
 
 # button mouse over
@@ -94,4 +92,5 @@ action_box = ActionBox()
 # create some buttons
 z_action = ActionButton("Drop", "Water")
 x_action = ActionButton("Dig")
+c_action = ActionButton("Sell", "Sand")
 

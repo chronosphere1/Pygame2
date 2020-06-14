@@ -37,6 +37,9 @@ class Unit:
         self.map_x = int(self.map_x)
         self.map_y = int(self.map_y)
 
+        # change the map colour a little bit
+        Map.change.change(self.map_x, self.map_y)
+
     # draw the player
     def draw_player(self, frame):
         # every few frames, change the colour
@@ -87,6 +90,10 @@ def x_action():
 
 def z_action():
     Resources.water.dump_water()
+
+
+def c_action():
+    Resources.sand.sell_sand()
 
 
 # create player

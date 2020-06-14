@@ -11,7 +11,7 @@ class Unit:
     def __init__(self, name):
         self.name = name
         self.amount = 0.0
-        self.energy_cost = 10
+        self.energy_cost = 1
         self.max = 20.0
         self.base_increase = 1/60
         self.text_colour = Constants.light_grey
@@ -101,7 +101,8 @@ class Sand(BaseResource):
                 if Map.map_tile_contents[player_x][player_y].sand > 0 and \
                         self.amount < self.max:
                     # increase sand
-                    Textbox.textbox.add_message(f"+1 sand! Sand left: {Map.map_tile_contents[player_x][player_y].sand}")
+                    Textbox.textbox.add_message(f"+1 sand! Sand left on tile: "
+                                                f"{Map.map_tile_contents[player_x][player_y].sand}")
                     self.increase(1)
 
                     energy.decrease(self.energy_cost)
@@ -109,31 +110,56 @@ class Sand(BaseResource):
             else:
                 Textbox.textbox.add_message(f"You want to dig sand, but you can't carry more than {self.max}")
 
+    def sell_sand(self):
+        if self.amount < 1:
+            Textbox.textbox.add_message(f"Sell at least 1 sand")
+        else:
+            sell_amount = 1
+            sell_price = sell_amount / 10
+
+            self.amount -= sell_amount
+            coin.amount += sell_price
+
+            Textbox.textbox.add_message(f"You sell {sell_amount} sand for {sell_price} coin")
+
 
 class Water(BaseResource):
     def __init__(self):
+
         # call base Resource
         super().__init__("Water")
 
     def shallow_water_x_action(self, player_x, player_y):
-        if self.amount < self.max:
-            roll = max(round(random.random() / 2, 1), 0.1)  # minimum of 0.1
+        # check if enough energy
+        if energy.energy_check(self):
+            if self.amount < self.max:
+                roll = max(round(random.random() / 2, 1), 0.1)  # minimum of 0.1
 
-            # increase sand
-            if sand.amount < sand.max:
-                sand.increase(round(roll, 1))
-                Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand")
+                # increase sand
+                if sand.amount < sand.max:
+                    sand.increase(round(roll, 1))
+                    Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand")
+                else:
+                    Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand, "
+                                                f"but you don't have room for more sand")
+
+                # remove water
+                Map.map_tile_contents[player_x][player_y].dig_shallow_water()
+
+                self.increase(1)
+                energy.decrease(self.energy_cost)
             else:
-                Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand, "
-                                            f"but you don't have room for more sand")
+                Textbox.textbox.add_message(f"Too much water, get rid of your water")
 
-            # remove water
-            Map.map_tile_contents[player_x][player_y].dig_shallow_water()
-
-            self.increase(1)
-            energy.decrease()
-        else:
-            Textbox.textbox.add_message(f"Too much water, get rid of your water")
+    def deep_water_x_action(self, player_x, player_y):
+        # check if enough energy
+        if energy.energy_check(self):
+            if self.amount < self.max:
+                self.increase(1)
+                energy.decrease(self.energy_cost)
+                Textbox.textbox.add_message(f"+1 water")
+            else:
+                Textbox.textbox.add_message(f"Too much water, get rid of your water")
 
     def dump_water(self):
         Textbox.textbox.add_message(f"You dump all your water, probably in the ocean")
@@ -149,7 +175,7 @@ sand = Sand()
 
 # set energy cost
 sand.energy_cost = 1
-water.energy_cost = 1
+water.energy_cost = 2
 
 # give some coin
 coin.amount = 1
@@ -166,7 +192,9 @@ def x_action(player_x, player_y, tile_terrain):
     elif tile_terrain == "-":
         water.shallow_water_x_action(player_x, player_y)
     elif tile_terrain == "x":
-        Textbox.textbox.add_message("Standing on deep water")
+        water.deep_water_x_action(player_x, player_y)
+    elif tile_terrain == "r":
+        Textbox.textbox.add_message(f"Rock. Cool.")
 
 
 # button click
@@ -187,6 +215,5 @@ def mouse_over(pos):
             resource.button.color = resource.button.light_color  # lighter
         else:
             resource.button.color = resource.button.base_color
-
 
 

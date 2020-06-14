@@ -24,7 +24,7 @@ class Tooltip:
         self.height = Constants.BLOCK_HEIGHT * 5
         self.surface = pygame.Surface((tip_width, tip_height), pygame.SRCALPHA, 32)
         self.visible = False
-        self.time = 60
+        self.time = 10
         self.text = "Tips could go here"
 
     def show_tooltip(self, button_text, pos):  # pos = x, y
@@ -33,7 +33,7 @@ class Tooltip:
             self.x = Constants.BLOCK_WIDTH * 6
             self.y = (pos[1] // 30) * 30 + 15
             self.text = tooltips[button_text]
-            self.time = 150
+            self.time = 30
 
     def draw(self):
         if self.visible:

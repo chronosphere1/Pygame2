@@ -22,9 +22,9 @@ def draw_everything(frame):
         resource.button.draw(Constants.game_display)
         # display the resource amounts
         resource.display_amount()
-        # draw the tooltips
-        Tooltips.tooltip.draw()
 
+    # draw the tooltips
+    Tooltips.tooltip.draw()
 
     # draw player
     Units.make_player(frame)
@@ -117,6 +117,10 @@ def game_loop():
                 # main action with x
                 if keys_pressed[pygame.K_x]:
                     Units.x_action()
+                elif keys_pressed[pygame.K_z]:
+                    Units.z_action()
+                elif keys_pressed[pygame.K_c]:
+                    Units.c_action()
 
                 # menu opening with 'm'
                 if keys_pressed[pygame.K_m]:

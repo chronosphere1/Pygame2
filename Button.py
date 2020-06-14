@@ -30,7 +30,7 @@ class Button:
                 text = font.render(self.text_top, 1, Constants.light_grey)
                 game_display.blit(text, (self.x + int((self.width / 2 - text.get_width() / 2)),
                                          self.y + int((self.height / 2 - text.get_height() / 2))))
-            if self.text_bottom != '':
+            elif self.text_bottom != '':
                 # top
 
                 font = Constants.font(self.font_size)
