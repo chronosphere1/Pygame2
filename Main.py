@@ -14,6 +14,7 @@ import random
 
 pygame.init()
 
+
 # draw everything
 def draw_everything(frame):
     for resource in Resources.resources_list:
@@ -53,12 +54,12 @@ class Move:
 
     def x_move(self, keys_pressed):
         if keys_pressed[pygame.K_LEFT] and keys_pressed[pygame.K_RIGHT]:
-            self.x_slow = True
+            self.x_speed = 0.0
         elif keys_pressed[pygame.K_LEFT]:
-            self.x_speed -= self.max_speed
+            self.x_speed = -self.max_speed
             self.x_slow = False
         elif keys_pressed[pygame.K_RIGHT]:
-            self.x_speed += self.max_speed
+            self.x_speed = self.max_speed
             self.x_slow = False
         else:
             pass
@@ -69,7 +70,7 @@ class Move:
 
     def y_move(self, keys_pressed):
         if keys_pressed[pygame.K_UP] and keys_pressed[pygame.K_DOWN]:
-            self.y_slow = True
+            self.y_speed = 0
         elif keys_pressed[pygame.K_UP]:
             self.y_speed -= self.max_speed
             self.y_slow = False
@@ -149,6 +150,9 @@ def game_loop():
                     move.y_slow = False
                 else:
                     move.y_slow = True
+
+            elif event.type == pygame.KEYDOWN and event.type == event.type == pygame.KEYUP:
+                print("Up and down at the same time")
 
             # mouse position
             pos = pygame.mouse.get_pos()
