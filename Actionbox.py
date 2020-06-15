@@ -73,6 +73,8 @@ def button_click(pos):
                 Units.x_action()
             elif action == c_action:
                 Resources.sand.sell_sand()
+            elif action == v_action:
+                Resources.water_filter.buy_filter()
 
 
 # button mouse over
@@ -93,4 +95,4 @@ action_box = ActionBox()
 z_action = ActionButton("Drop", "Water")
 x_action = ActionButton("Dig")
 c_action = ActionButton("Sell", "Sand")
-
+v_action = ActionButton("Buy", "Filter")

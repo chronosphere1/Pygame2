@@ -14,6 +14,7 @@ class Unit:
         self.energy_cost = 1
         self.max = 20.0
         self.base_increase = 1/60
+        self.visible = True
         self.text_colour = Constants.light_grey
 
     def increase(self, increase_amount):
@@ -43,6 +44,7 @@ class BaseResource(Unit):
     def __init__(self, name):
         # call base resources
         super().__init__(name)
+        self.visible = True
 
         # add to resources list and set order
         resources_list.append(self)
@@ -112,7 +114,7 @@ class Sand(BaseResource):
 
     def sell_sand(self):
         if self.amount < 1:
-            Textbox.textbox.add_message(f"Sell at least 1 sand")
+            Textbox.textbox.add_message(f"Sell what sand? You only have {self.amount}")
         else:
             sell_amount = 1
             sell_price = sell_amount / 10
@@ -138,7 +140,7 @@ class Water(BaseResource):
                 # increase sand
                 if sand.amount < sand.max:
                     sand.increase(round(roll, 1))
-                    Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand")
+                    Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand.")
                 else:
                     Textbox.textbox.add_message(f"Dug up +1 water and +{roll} sand, "
                                                 f"but you don't have room for more sand")
@@ -166,24 +168,58 @@ class Water(BaseResource):
         self.amount = 0.0
 
 
+class Filter(BaseResource):
+    def __init__(self):
+        # call base Resource
+        super().__init__("Filter")
+        self.amount = 0
+        self.cost = 10
+        self.energy_cost = 1 / 180
+        self.base_increase = 1
+        self.ratio = 60
+        self.visible = False
+
+    def buy_filter(self):
+        if coin.amount >= self.cost:
+            coin.amount -= self.cost
+            self.amount += self.base_increase
+            Textbox.textbox.add_message(f"You buy a filter. It filters sand out of water")
+        else:
+            Textbox.textbox.add_message(f"A water filter costs {self.cost} but you only have {round(coin.amount, 2)}")
+
+    def get_sand(self):
+        # check if the filter has: room for sand; water in inventory; enough energy
+        # if so, give sand and reduce the water/energy cost
+        water_cost = self.amount / self.ratio / 5
+
+        if sand.amount + sand.base_increase / self.ratio <= sand.max:
+            if water.amount >= water_cost:
+                if energy.amount >= self.energy_cost * self.amount:
+                    energy.amount -= self.energy_cost * self.amount
+                    water.amount -= water_cost
+                    sand.amount += sand.base_increase / self.ratio
+
+
 # create the resources
 resources_list = []
 coin = BaseResource("Coin")
 energy = Energy("Energy")
 water = Water()
 sand = Sand()
+water_filter = Filter()
 
 # set energy cost
 sand.energy_cost = 1
 water.energy_cost = 2
 
 # give some coin
-coin.amount = 1
+coin.amount = 100
 
 
 # does a certain amount of things per tick
 def machine_main():
     energy.recalculate()
+    water_filter.get_sand()
 
 
 def x_action(player_x, player_y, tile_terrain):
