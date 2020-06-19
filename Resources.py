@@ -248,8 +248,8 @@ def button_click(pos):
 def mouse_over(pos):
     for resource in resources_list:
         if resource.button.is_over(pos):
-            resource.button.color = resource.button.light_color  # lighter
+            resource.button.light_color = resource.button.highlight_color  # lighter
         else:
-            resource.button.color = resource.button.base_color
+            resource.button.light_color = resource.button.light_base_color
 
 

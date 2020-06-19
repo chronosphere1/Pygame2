@@ -119,8 +119,18 @@ def draw_map(x, y):
                          Constants.BLOCK_WIDTH - 2,
                          Constants.BLOCK_HEIGHT - 2)
     pygame.draw.rect(Constants.game_display, lighter_colour, block2)
-    #
-    # # draw darker square on top
+
+    # calculate fullness
+    # total
+
+    # print(f"{carrying}/{total}")
+    if map_tile_contents[x][y].tile_letter == "s":
+        total = map_tile_contents[x][y].max
+        carrying = map_tile_contents[x][y].sand
+        full =
+
+
+    # draw darker square on top
     block3 = pygame.Rect(x_pos + 3, y_pos + 3,
                          Constants.BLOCK_WIDTH - 6,
                          Constants.BLOCK_HEIGHT - 6)

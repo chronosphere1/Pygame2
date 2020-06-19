@@ -83,9 +83,9 @@ def mouse_over(pos):
     for action in action_list:
         if action.button.is_over(pos):
             # change colour
-            action.button.color = Constants.light_blue
+            action.button.light_color = action.button.highlight_color
         else:
-            action.button.color = action.button.base_color
+            action.button.light_color = action.button.light_base_color
 
 
 # load the textbox
