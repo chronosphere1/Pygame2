@@ -73,7 +73,8 @@ class Energy(BaseResource):
     def __init__(self, name):
         # call base Resource
         super().__init__(name)
-        self.amount = 20
+        self.amount = 200
+        self.max = 200
 
     def recalculate(self):
         self.increase(self.base_increase)

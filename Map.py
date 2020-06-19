@@ -120,20 +120,17 @@ def draw_map(x, y):
                          Constants.BLOCK_HEIGHT - 2)
     pygame.draw.rect(Constants.game_display, lighter_colour, block2)
 
-    # calculate fullness
-    # total
-
-    # print(f"{carrying}/{total}")
+    # calculate fullness for sand tiles
+    extra_y = 0
     if map_tile_contents[x][y].tile_letter == "s":
         total = map_tile_contents[x][y].max
         carrying = map_tile_contents[x][y].sand
-        full =
-
+        extra_y = 23 - int(round(carrying * (23 / total)))  # 25 pixels that we can play with
 
     # draw darker square on top
-    block3 = pygame.Rect(x_pos + 3, y_pos + 3,
+    block3 = pygame.Rect(x_pos + 3, y_pos + 3 + extra_y,
                          Constants.BLOCK_WIDTH - 6,
-                         Constants.BLOCK_HEIGHT - 6)
+                         Constants.BLOCK_HEIGHT - 6 - extra_y)
     pygame.draw.rect(Constants.game_display, tile_colour, block3)
 
 
