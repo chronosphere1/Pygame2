@@ -45,6 +45,7 @@ class BaseResource(Unit):
         # call base resources
         super().__init__(name)
         self.visible = True
+        self.display_rounding = 1
 
         # add to resources list and set order
         resources_list.append(self)
@@ -61,8 +62,12 @@ class BaseResource(Unit):
     # display the resource amount
     def display_amount(self):
         font = Constants.font(30)
-        # display amount as text, rounded to 1 digit
-        text = font.render(str(round(self.amount, 1)), True, self.text_colour)
+        # display amount as text, rounded to 1 or 3. Can be done in a much better way
+        if self.display_rounding == 3:
+            text = font.render(str("{:.3f}").format(round(self.amount, self.display_rounding)), True, self.text_colour)
+        elif self.display_rounding == 1:
+            text = font.render(str("{:.1f}").format(round(self.amount, self.display_rounding)), True, self.text_colour)
+
         x_pos = Constants.WIDTH_10_PERCENT + 7
         y_pos = Constants.BLOCK_HEIGHT * self.order + 7
         Constants.game_display.blit(text, (x_pos, y_pos))
@@ -75,6 +80,7 @@ class Energy(BaseResource):
         super().__init__(name)
         self.amount = 200
         self.max = 200
+        self.display_rounding = 3
 
     def recalculate(self):
         self.increase(self.base_increase)

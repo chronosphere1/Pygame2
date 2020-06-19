@@ -167,6 +167,7 @@ def initialise_map(world_map):
             map_tile_contents[x_grid][y_grid].change_tile_letter(tile_contents)
 
 
+# changes the tiles around the given x,y a little bit
 class Changer:
     def __init__(self):
         self.x = 20
