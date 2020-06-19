@@ -44,6 +44,7 @@ class Tile:
 
         self.max = 20
 
+        # base tile colour
         self.tile_colour = (255, 0, 255)
         self.lighter_colour = (255, 0, 255)
         self.super_light_colour = (255, 0, 255)
@@ -68,7 +69,7 @@ class Tile:
             # small change of different colour
             random_addition = random.randint(0, 30)
             colour = min(255, colour + 30)
-            colour2 = min(255, colour + random_addition )
+            colour2 = min(255, colour + random_addition)
             lighter.append(colour)
             lighter2.append(colour2)
 
@@ -82,6 +83,7 @@ class Tile:
         self.tile_letter = new_tile
         self.get_tile_colour()
 
+    # check and everything should be moved to resources. only map actions should be in map
     def dig_sand(self):
         self.sand -= 1
         if self.sand == 0:
